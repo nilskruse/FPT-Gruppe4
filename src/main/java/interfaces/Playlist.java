@@ -16,4 +16,6 @@ public interface Playlist extends Remote, Serializable, Iterable<Song>{
     int sizeOfPlaylist() throws RemoteException;
     Song findSongByPath(String name) throws RemoteException;
     Song findSongByID(long id) throws RemoteException;
+
+    // Test Jan
 }
