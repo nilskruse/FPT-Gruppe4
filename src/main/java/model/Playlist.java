@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class Playlist extends ModifiableObservableListBase<Song> implements interfaces.Playlist{
 
     public boolean addSong(Song s) {
+
         return this.add(s);
     }
 
     public boolean deleteSong(Song s) {
+
         return this.remove(s);
     }
 
@@ -40,10 +42,12 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
     }
 
     public void clearPlaylist() {
+
         this.clear();
     }
 
     public int sizeOfPlaylist() {
+
         return this.size();
     }
 
@@ -67,27 +71,32 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public Song get(int index) {
+
         return this.get(index);
     }
 
     @Override
     public int size() {
+
         return this.size();
     }
 
 
     @Override
     protected void doAdd(int index, Song element) {
+
         this.add(index,element);
     }
 
     @Override
     protected Song doSet(int index, Song element) {
+
         return this.set(index,element);
     }
 
     @Override
     protected Song doRemove(int index) {
+
         return this.remove(index);
     }
 }

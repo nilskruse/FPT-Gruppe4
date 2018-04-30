@@ -26,7 +26,8 @@ public class MainClass extends Application{
 
 
         // JavaFX new
-        Scene scene  = new Scene(view);
+        Scene scene  = new Scene(view, 700, 500);
+        primaryStage.setTitle("MUSICPLAYER");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
