@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Song implements interfaces.Song {
 
-    private SimpleStringProperty path, title, album, interpret;
+    private SimpleStringProperty path = new SimpleStringProperty(), title = new SimpleStringProperty(), album = new SimpleStringProperty(), interpret = new SimpleStringProperty();
     private long id;
 
 

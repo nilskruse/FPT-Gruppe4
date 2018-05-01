@@ -6,63 +6,55 @@ import javafx.collections.ModifiableObservableListBase;
 import java.util.ArrayList;
 
 public class Playlist extends ModifiableObservableListBase<Song> implements interfaces.Playlist{
+    private ArrayList<Song> playlist = new ArrayList<Song>();
 
+    @Override
     public boolean addSong(Song s) {
-
-        return this.add(s);
+        return playlist.add(s);
     }
 
+    @Override
     public boolean deleteSong(Song s) {
-
-        return this.remove(s);
+        return playlist.remove(s);
     }
 
+    @Override
     public boolean deleteSongByID(long id) {
-        for (Song s : this) {
-            if(s.getId() == id){
-                return this.remove(s);
-            }
-        }
-        return false;
+        return playlist.removeIf(song -> song.getId() == id);
     }
 
-    public void setList(ArrayList<Song> list) {
-        this.clear();
-        for(Song s : list){
-            this.addSong(s);
-        }
+    public void setList(ArrayList<Song> playlist) {
+        this.playlist = playlist;
     }
 
     public ArrayList<Song> getList() {
-        ArrayList<Song> r = new ArrayList<Song>();
-        for(Song s : this){
-            r.add(s);
-        }
-        return r;
+        return playlist;
     }
 
+    @Override
     public void clearPlaylist() {
-
-        this.clear();
+        playlist.clear();
     }
 
+    @Override
     public int sizeOfPlaylist() {
-
-        return this.size();
+        return playlist.size();
     }
 
-    public Song findSongByPath(String name) {
-        for (Song s : this) {
-            if(s.getPath() == name){
+    @Override
+    public Song findSongByID(long id) {
+        for(Song s : playlist){
+            if(s.getId() == id){
                 return s;
             }
         }
         return null;
     }
 
-    public Song findSongByID(long id) {
-        for (Song s : this) {
-            if(s.getId() == id){
+    @Override
+    public Song findSongByPath(String path) {
+        for(Song s : playlist){
+            if(s.getPath() == path){
                 return s;
             }
         }
@@ -71,32 +63,27 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public Song get(int index) {
-
-        return this.get(index);
+        return playlist.get(index);
     }
 
     @Override
-    public int size() {
-
-        return this.size();
-    }
-
-
-    @Override
-    protected void doAdd(int index, Song element) {
-
-        this.add(index,element);
+    public int size(){
+        return sizeOfPlaylist();
     }
 
     @Override
-    protected Song doSet(int index, Song element) {
-
-        return this.set(index,element);
+    protected void doAdd(int index, Song s){
+        playlist.add(index,s);
     }
 
     @Override
-    protected Song doRemove(int index) {
-
-        return this.remove(index);
+    protected Song doSet(int index, Song s){
+        return playlist.set(index,s);
     }
+
+    @Override
+    protected Song doRemove(int index){
+        return playlist.remove(index);
+    }
+
 }

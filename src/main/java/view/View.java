@@ -18,10 +18,9 @@ import java.net.URL;
 
 
 public class View extends BorderPane {
-    private ObservableList<Song> list = FXCollections.observableArrayList();
     private Controller contr;
     private ListView<Song> listview = new ListView<Song>();
-    private ListView<Playlist> libraryview = new ListView<Playlist>();
+    private ListView<Song> libraryview = new ListView<Song>();
 
     //private Button buttonAdd = new Button("Add all");
     //private Button buttonDelete = new Button("Delete");
@@ -89,18 +88,45 @@ public class View extends BorderPane {
         setRight(metadata);
 
         //Actions
-        addAllButton.setOnAction(e->{contr.add(new model.Song());});
+
+        // test song
+        Song testsong = new model.Song();
+        testsong.setTitle("Title");
+        testsong.setInterpret("Interpret");
+        testsong.setAlbum("Album");
+        testsong.setPath("Path");
+        addAllButton.setOnAction(e->{contr.add(testsong);
+            System.out.println(libraryview.getItems());});
+        //Cell Factory
+        libraryview.setCellFactory(c -> {
+
+			ListCell<Song> cell = new ListCell<Song>() {
+                @Override
+                protected void updateItem(Song myObject, boolean b) {
+                    super.updateItem(myObject, myObject == null || b);
+                    if (myObject != null) {
+                        setText("Element: " + myObject.toString() + "...");
+                    } else {
+                        // wichtig da sonst der text stehen bleibt!
+                        setText("q");
+                    }
+                }
+
+            };
+			return cell;
+
+          });
     }
 
 
-    public ObservableList<Song> getList() {
+    public ListView<Song> getList() {
 
-        return list;
+        return libraryview;
     }
 
-    public void setList(ObservableList<Song> list) {
+    public void setList(ListView<Song> list) {
 
-        this.list = list;
+        this.libraryview = list;
     }
     public void addController(Controller contr){
 
