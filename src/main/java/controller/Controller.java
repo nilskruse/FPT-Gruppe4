@@ -27,4 +27,15 @@ public class Controller{
             model.getPlaylist().addSong(s);
         }
     }
+    public void deleteSongFromPlaylist(Song s){
+        model.getPlaylist().deleteSong(s);
+    }
+    public void changeSongProperties(Song s, String title, String album, String interpret ){
+        s.setTitle(title);
+        s.setAlbum(album);
+        s.setInterpret(interpret);
+
+
+
+    }
 }

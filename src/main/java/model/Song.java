@@ -70,7 +70,7 @@ public class Song implements interfaces.Song {
 
     public String toString(){
         if(id < 10){
-            return "0" + id + " " + getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
+            return "0" + (long)(id +1) + " " + getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
         }else {
             return id + " " + getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
         }

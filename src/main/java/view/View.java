@@ -40,7 +40,7 @@ public class View extends BorderPane {
     private Button pauseButton = new Button("Pause");
     private Button nextButton = new Button("Next");
     private Button commitButton = new Button("Commit");
-
+    private Button deleteButton = new Button("Delete");
     private Button addToPlaylistButton = new Button("Add to Playlist");
 
     //Top
@@ -67,7 +67,7 @@ public class View extends BorderPane {
         addToPlaylistControl.setPadding(new Insets(8,0,8,2));
         addToPlaylistControl.setStyle("-fx-border-style: solid;"
                 + "-fx-border-width: 0.1;" + "-fx-border-color: black;");
-        VBox metadata = new VBox(title, titleInput, interpret, interpretInput, album, albumInput, controls, addToPlaylistControl);
+        VBox metadata = new VBox(title, titleInput, interpret, interpretInput, album, albumInput, controls, addToPlaylistControl, deleteButton);
 
 
         //Top
@@ -89,9 +89,25 @@ public class View extends BorderPane {
         setRight(metadata);
 
         //Actions
+        libraryview.setOnMouseClicked(e -> {
+            if(!libraryview.getProperties().isEmpty()) {
+                titleInput.setText(libraryview.getSelectionModel().getSelectedItem().getTitle());
+                albumInput.setText(libraryview.getSelectionModel().getSelectedItem().getAlbum());
+                interpretInput.setText(libraryview.getSelectionModel().getSelectedItem().getInterpret());
+            }
+        });
 
-        // test song
+        listview.setOnMouseClicked(e -> {
+            if(!listview.getProperties().isEmpty()){
+                titleInput.setText(listview.getSelectionModel().getSelectedItem().getTitle());
+                albumInput.setText(listview.getSelectionModel().getSelectedItem().getAlbum());
+                interpretInput.setText(listview.getSelectionModel().getSelectedItem().getInterpret());
+            }
 
+        });
+        commitButton.setOnAction(e ->{
+            contr.changeSongProperties(libraryview.getSelectionModel().getSelectedItem(),titleInput.getText(),albumInput.getText(),interpretInput.getText());
+        });
         addAllButton.setOnAction(e->{
             contr.addAllToPlaylist();
         });
@@ -101,6 +117,7 @@ public class View extends BorderPane {
             System.out.println(libraryview.getSelectionModel().getSelectedItem());
         } );
 
+        deleteButton.setOnAction(e ->{contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());});
 
         //Cell Factory
         libraryview.setCellFactory(c -> {
@@ -120,6 +137,7 @@ public class View extends BorderPane {
 			return cell;
 
           });
+
         listview.setCellFactory(c -> {
 
             ListCell<Song> cell = new ListCell<Song>() {
