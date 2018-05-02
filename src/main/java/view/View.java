@@ -93,8 +93,14 @@ public class View extends BorderPane {
         // test song
 
         addAllButton.setOnAction(e->{
-            contr.add(new model.Song(titleInput.getText(),albumInput.getText(),interpretInput.getText(),"path",0));
+            contr.addAllToPlaylist();
         });
+
+        addToPlaylistButton.setOnAction(e ->{
+            contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
+            System.out.println(libraryview.getSelectionModel().getSelectedItem());
+        } );
+
 
         //Cell Factory
         libraryview.setCellFactory(c -> {
@@ -114,6 +120,23 @@ public class View extends BorderPane {
 			return cell;
 
           });
+        listview.setCellFactory(c -> {
+
+            ListCell<Song> cell = new ListCell<Song>() {
+                @Override
+                protected void updateItem(Song myObject, boolean b) {
+                    super.updateItem(myObject, myObject == null || b);
+                    if (myObject != null) {
+                        setText(myObject.toString());
+                    } else {
+                        setText("");
+                    }
+                }
+
+            };
+            return cell;
+
+        });
     }
 
 
@@ -121,7 +144,9 @@ public class View extends BorderPane {
 
         return libraryview;
     }
-
+    public ListView<Song> getPlaylist(){
+        return listview;
+    }
     public void setList(ListView<Song> list) {
 
         this.libraryview = list;

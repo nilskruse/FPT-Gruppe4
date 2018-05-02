@@ -27,7 +27,7 @@ public class MainClass extends Application{
 
         Controller controller = new Controller();
         controller.link(model, view);
-        readSongs(model);
+        addSongsFromFolder(model);
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);
@@ -36,7 +36,7 @@ public class MainClass extends Application{
         primaryStage.show();
     }
 
-    public static void readSongs(Model model){
+    public static void addSongsFromFolder(Model model){
         long id = model.getLibrary().size();
         // initialize File object
         File file = new File("songs");
@@ -47,10 +47,8 @@ public class MainClass extends Application{
             File[] files = file.listFiles();
             for(File f:files){
                 try {
-                    model.getLibrary().addSong(new Song(f.getName(),"","",f.getPath(),id));
+                    model.getLibrary().addSong(new Song(f.getName(),"","",f.getCanonicalPath(),id));
                     id++;
-                    System.out.println(f.getCanonicalPath());
-                    System.out.println(f.getName());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
