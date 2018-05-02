@@ -18,6 +18,7 @@ import java.net.URL;
 
 
 public class View extends BorderPane {
+
     private Controller contr;
     private ListView<Song> listview = new ListView<Song>();
     private ListView<Song> libraryview = new ListView<Song>();
@@ -90,13 +91,12 @@ public class View extends BorderPane {
         //Actions
 
         // test song
-        Song testsong = new model.Song();
-        testsong.setTitle("Title");
-        testsong.setInterpret("Interpret");
-        testsong.setAlbum("Album");
-        testsong.setPath("Path");
-        addAllButton.setOnAction(e->{contr.add(testsong);
-            System.out.println(libraryview.getItems());});
+
+        addAllButton.setOnAction(e->{
+            contr.add(new model.Song(titleInput.getText(),albumInput.getText(),interpretInput.getText(),"path",0));
+            System.out.println(libraryview.getItems());
+        });
+
         //Cell Factory
         libraryview.setCellFactory(c -> {
 
@@ -105,10 +105,9 @@ public class View extends BorderPane {
                 protected void updateItem(Song myObject, boolean b) {
                     super.updateItem(myObject, myObject == null || b);
                     if (myObject != null) {
-                        setText("Element: " + myObject.toString() + "...");
+                        setText(myObject.toString());
                     } else {
-                        // wichtig da sonst der text stehen bleibt!
-                        setText("q");
+                        setText("");
                     }
                 }
 

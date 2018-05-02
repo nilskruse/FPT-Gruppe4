@@ -10,17 +10,17 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public boolean addSong(Song s) {
-        return playlist.add(s);
+        return this.add(s);
     }
 
     @Override
     public boolean deleteSong(Song s) {
-        return playlist.remove(s);
+        return this.remove(s);
     }
 
     @Override
     public boolean deleteSongByID(long id) {
-        return playlist.removeIf(song -> song.getId() == id);
+        return this.removeIf(song -> song.getId() == id);
     }
 
     public void setList(ArrayList<Song> playlist) {
@@ -33,12 +33,12 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public void clearPlaylist() {
-        playlist.clear();
+        this.clear();
     }
 
     @Override
     public int sizeOfPlaylist() {
-        return playlist.size();
+        return this.size();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     @Override
     public int size(){
-        return sizeOfPlaylist();
+        return playlist.size();
     }
 
     @Override

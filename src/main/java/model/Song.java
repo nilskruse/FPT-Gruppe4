@@ -6,7 +6,13 @@ public class Song implements interfaces.Song {
 
     private SimpleStringProperty path = new SimpleStringProperty(), title = new SimpleStringProperty(), album = new SimpleStringProperty(), interpret = new SimpleStringProperty();
     private long id;
-
+    public Song(String title,String album, String interpret, String path, long id){
+        this.setTitle(title);
+        this.setAlbum(album);
+        this.setInterpret(interpret);
+        this.setPath(path);
+        this.id = id;
+    }
 
 
     public void setAlbum(String album) {
@@ -63,7 +69,7 @@ public class Song implements interfaces.Song {
     }
 
     public String toString(){
-        return getTitle()+getAlbum()+getInterpret()+getPath();
+        return getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
     }
 
 
