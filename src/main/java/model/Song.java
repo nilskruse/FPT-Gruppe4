@@ -69,7 +69,11 @@ public class Song implements interfaces.Song {
     }
 
     public String toString(){
-        return getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
+        if(id < 10){
+            return "0" + id + " " + getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
+        }else {
+            return id + " " + getTitle() + " " + getAlbum() + " " + getInterpret() + " " + getPath();
+        }
     }
 
 

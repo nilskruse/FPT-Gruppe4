@@ -94,7 +94,6 @@ public class View extends BorderPane {
 
         addAllButton.setOnAction(e->{
             contr.add(new model.Song(titleInput.getText(),albumInput.getText(),interpretInput.getText(),"path",0));
-            System.out.println(libraryview.getItems());
         });
 
         //Cell Factory
