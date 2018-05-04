@@ -35,10 +35,10 @@ public class View extends BorderPane {
     private Label album = new Label("Album:");
     private TextField albumInput = new TextField();
 
-    //Metadata controls (to-do: use icons from assets instead)
-    private Button playButton = new Button("Play");
-    private Button pauseButton = new Button("Pause");
-    private Button nextButton = new Button("Next");
+    //Metadata controls (to-do: use icons from assets instead
+    private Button playButton = new Button();
+    private Button pauseButton = new Button();
+    private Button nextButton = new Button();
     private Button commitButton = new Button("Commit");
     private Button deleteButton = new Button("Delete");
     private Button addToPlaylistButton = new Button("Add to Playlist");
@@ -55,9 +55,15 @@ public class View extends BorderPane {
     public View(){
 
         //Right
-        //To-do: use icons from assets for controls instead
-        //Image pauseImg = new Image("assets/pause.png");
-        HBox controls = new HBox(playButton, pauseButton, nextButton, commitButton);
+        //Define Icons for Buttons
+        Image pauseImg  = new Image( "assets/pause.png");
+        pauseButton.setGraphic(new ImageView(pauseImg));
+        Image playImg  = new Image( "assets/play.png");
+        playButton.setGraphic(new ImageView(playImg));
+        Image nextImg  = new Image( "assets/weiter.png");
+        nextButton.setGraphic(new ImageView(nextImg));
+
+        HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
         Insets paddingMeta = new Insets(4, 2, 4,2);
         controls.setPadding(paddingMeta);
@@ -117,7 +123,9 @@ public class View extends BorderPane {
             System.out.println(libraryview.getSelectionModel().getSelectedItem());
         } );
 
-        deleteButton.setOnAction(e ->{contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());});
+        deleteButton.setOnAction(e ->{
+            contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
+        });
 
         //Cell Factory
         libraryview.setCellFactory(c -> {
