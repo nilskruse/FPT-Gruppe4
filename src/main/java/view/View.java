@@ -22,8 +22,8 @@ import java.net.URL;
 public class View extends BorderPane {
 
     private Controller contr;
-    private ListView<Song> listview = new ListView<Song>();
-    private ListView<Song> libraryview = new ListView<Song>();
+    private ListView<Song> listview = new ListView<>();
+    private ListView<Song> libraryview = new ListView<>();
 
     //private Button buttonAdd = new Button("Add all");
     //private Button buttonDelete = new Button("Delete");
@@ -54,6 +54,14 @@ public class View extends BorderPane {
     //Bottom
     private Button addAllButton = new Button("Add all");
 
+    private ImageView setIcon(Image img){
+        ImageView imgView = new ImageView(img);
+        imgView.setFitHeight(10);
+        imgView.setFitWidth(10);
+        return imgView;
+
+    }
+
     public View(){
 
         //Right
@@ -69,9 +77,10 @@ public class View extends BorderPane {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        nextButton.setGraphic(new ImageView(nextImg));
-        playButton.setGraphic(new ImageView(playImg));
-        pauseButton.setGraphic(new ImageView(pauseImg));
+
+        nextButton.setGraphic(this.setIcon(nextImg));
+        playButton.setGraphic(this.setIcon(playImg));
+        pauseButton.setGraphic(this.setIcon(pauseImg));
 
         HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
@@ -141,7 +150,7 @@ public class View extends BorderPane {
         //Cell Factory
         libraryview.setCellFactory(c -> {
 
-			ListCell<Song> cell = new ListCell<Song>() {
+			ListCell<Song> cell = new ListCell<>() {
                 @Override
                 protected void updateItem(Song myObject, boolean b) {
                     super.updateItem(myObject, myObject == null || b);
@@ -159,7 +168,7 @@ public class View extends BorderPane {
 
         listview.setCellFactory(c -> {
 
-            ListCell<Song> cell = new ListCell<Song>() {
+            ListCell<Song> cell = new ListCell<>() {
                 @Override
                 protected void updateItem(Song myObject, boolean b) {
                     super.updateItem(myObject, myObject == null || b);
@@ -192,4 +201,6 @@ public class View extends BorderPane {
 
         this.contr = contr;
     }
+
+
 }
