@@ -54,6 +54,9 @@ public class View extends BorderPane {
     //Bottom
     private Button addAllButton = new Button("Add all");
 
+    //Selected song variable
+    private interfaces.Song selectedSong = null;
+
     private ImageView setIcon(Image img){
         ImageView imgView = new ImageView(img);
         imgView.setFitHeight(10);
@@ -119,6 +122,7 @@ public class View extends BorderPane {
                 titleInput.setText(libraryview.getSelectionModel().getSelectedItem().getTitle());
                 albumInput.setText(libraryview.getSelectionModel().getSelectedItem().getAlbum());
                 interpretInput.setText(libraryview.getSelectionModel().getSelectedItem().getInterpret());
+                selectedSong = libraryview.getSelectionModel().getSelectedItem();
             }
         });
 
@@ -127,11 +131,14 @@ public class View extends BorderPane {
                 titleInput.setText(listview.getSelectionModel().getSelectedItem().getTitle());
                 albumInput.setText(listview.getSelectionModel().getSelectedItem().getAlbum());
                 interpretInput.setText(listview.getSelectionModel().getSelectedItem().getInterpret());
+                selectedSong = listview.getSelectionModel().getSelectedItem();
             }
 
         });
         commitButton.setOnAction(e ->{
-            contr.changeSongProperties(libraryview.getSelectionModel().getSelectedItem(),titleInput.getText(),albumInput.getText(),interpretInput.getText());
+            contr.changeSongProperties(selectedSong,titleInput.getText(),albumInput.getText(),interpretInput.getText());
+            listview.refresh();
+            libraryview.refresh();
         });
         addAllButton.setOnAction(e->{
             contr.addAllToPlaylist();
@@ -139,7 +146,6 @@ public class View extends BorderPane {
 
         addToPlaylistButton.setOnAction(e ->{
             contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
-            System.out.println(libraryview.getSelectionModel().getSelectedItem());
         } );
 
         deleteButton.setOnAction(e ->{
