@@ -127,6 +127,7 @@ public class View extends BorderPane {
             contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
         });
 
+
         //Cell Factory
         libraryview.setCellFactory(c -> {
 
