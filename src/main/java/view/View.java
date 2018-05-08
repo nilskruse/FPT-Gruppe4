@@ -145,7 +145,9 @@ public class View extends BorderPane {
         });
 
         addToPlaylistButton.setOnAction(e ->{
-            contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
+            if(libraryview.getSelectionModel().getSelectedItem() instanceof Song) {
+                contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
+            }
         } );
 
         deleteButton.setOnAction(e ->{
