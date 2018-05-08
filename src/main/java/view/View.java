@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import model.Playlist;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 
 
@@ -56,12 +58,20 @@ public class View extends BorderPane {
 
         //Right
         //Define Icons for Buttons
-        Image pauseImg  = new Image( "assets/pause.png");
-        pauseButton.setGraphic(new ImageView(pauseImg));
-        Image playImg  = new Image( "assets/play.png");
-        playButton.setGraphic(new ImageView(playImg));
-        Image nextImg  = new Image( "assets/weiter.png");
+        Image nextImg  = null;
+        Image playImg  = null;
+        Image pauseImg  = null;
+
+        try {
+            nextImg = new Image( new FileInputStream("assets/next.png"));
+            pauseImg = new Image( new FileInputStream("assets/pause.png"));
+            playImg = new Image( new FileInputStream("assets/play.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         nextButton.setGraphic(new ImageView(nextImg));
+        playButton.setGraphic(new ImageView(playImg));
+        pauseButton.setGraphic(new ImageView(pauseImg));
 
         HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
