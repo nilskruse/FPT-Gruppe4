@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import model.Playlist;
 
@@ -19,7 +20,7 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 
 
-public class View extends BorderPane {
+public  class View extends BorderPane {
 
     private Controller contr;
     private ListView<Song> listview = new ListView<>();
@@ -49,6 +50,7 @@ public class View extends BorderPane {
     private ComboBox dropdown = new ComboBox();
     private Button loadButton = new Button("Load");
     private Button saveButton = new Button("Save");
+   // Playtime soll runterlaufen
     private Text playTime = new Text("0:14");
 
     //Bottom
@@ -146,6 +148,9 @@ public class View extends BorderPane {
             contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
         });
 
+        playButton.setOnAction( e -> {
+            contr.play(listview.getSelectionModel().getSelectedItem());
+        });
 
         //Cell Factory
         libraryview.setCellFactory(c -> {

@@ -1,8 +1,12 @@
 package controller;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import model.Model;
 import interfaces.Song;
 import view.View;
+
+import java.io.File;
 
 public class Controller{
 
@@ -38,7 +42,16 @@ public class Controller{
 
 
     }
-    public void PlayPause(){
+    public void play(Song s)
+    {
+
+        // Musik abspielen
+
+        model.setplayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
+        model.getplayer().play();
+
+        // Pfad bestimmen
+        // wenn ausgewählter song 0 dann erster Song aus Playlist
 
     }
 }
