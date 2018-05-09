@@ -45,7 +45,7 @@ public class Controller{
     }
 
     public void addSongsFromFolder(Model model){
-        long id = model.getLibrary().size();
+        long id = model.getLibrary().size() + 1;
         // initialize File object
         File file = new File("songs");
 
