@@ -67,20 +67,23 @@ public class Controller{
     }
     public void play(Song s)
     {
-        //musik abspielen
+            if(model.getPlayer() != null)
+            {
+                model.getPlayer().dispose();
+            }
 
             try {
-                model.setplayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
-                model.getplayer().play();
+                model.setPlayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
+                model.getPlayer().play();
             }
             catch (NullPointerException e)
             {
 
                try
                {
-                   model.setplayer(new MediaPlayer(new Media(new File( model.getPlaylist().findSongByID(0).getPath()).toURI().toString())));
+                   model.setPlayer(new MediaPlayer(new Media(new File( model.getPlaylist().findSongByID(1).getPath()).toURI().toString())));
                    View.getPlaylist().getSelectionModel().select(0);
-                   model.getplayer().play();
+                   model.getPlayer().play();
                }
                catch(NullPointerException f)
                 {
@@ -89,14 +92,13 @@ public class Controller{
 
             }
 
-
-
     }
+
     public void pause()
     {
         try
         {
-            model.getplayer().pause();
+            model.getPlayer().pause();
         }catch (NullPointerException e)
         {
             PlaylistEmptyError();
@@ -105,11 +107,12 @@ public class Controller{
     }
     public  void next(Song s)
     {
+
             long id;
             try {
 
                 id = s.getId()+1;
-                if(id <= model.getPlaylist().size()-1 )
+                if(id <= model.getPlaylist().size() )
                 {
                     // id des Songs neu setzten
                     View.getPlaylist().getSelectionModel().select((int) id - 1);
@@ -128,6 +131,7 @@ public class Controller{
                 // falls kein Song ausgewählt ist wird hier einfach Play aufgerufen sodass der erste songe gespielt wird
                 this.play(s);
             }
+
 
 
 

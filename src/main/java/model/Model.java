@@ -21,11 +21,11 @@ public class Model{
 
         return playlist;
     }
-    public MediaPlayer getplayer() {
+    public MediaPlayer getPlayer() {
 
         return player;
     }
-    public void setplayer(MediaPlayer player) {
+    public void setPlayer(MediaPlayer player) {
 
         this.player = player;
     }
