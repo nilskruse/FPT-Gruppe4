@@ -2,6 +2,8 @@ package main;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import model.Model;
 import model.Song;
@@ -9,6 +11,7 @@ import view.View;
 import controller.Controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class MainClass extends Application{
@@ -27,6 +30,8 @@ public class MainClass extends Application{
 
         Controller controller = new Controller();
         controller.link(model, view);
+
+
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);
