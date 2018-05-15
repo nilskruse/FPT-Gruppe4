@@ -23,7 +23,7 @@ import java.net.URL;
 public  class View extends BorderPane {
 
     private Controller contr;
-    private ListView<Song> listview = new ListView<>();
+    private static ListView<Song> listview = new ListView<>();
     private ListView<Song> libraryview = new ListView<>();
 
     //private Button buttonAdd = new Button("Add all");
@@ -155,11 +155,18 @@ public  class View extends BorderPane {
         deleteButton.setOnAction(e ->{
             contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
         });
-
+        // Play Button
         playButton.setOnAction( e -> {
             contr.play(listview.getSelectionModel().getSelectedItem());
         });
-
+        // Pause Button
+        pauseButton.setOnAction( e -> {
+            contr.pause();
+        });
+       // Pause Button
+        nextButton.setOnAction( e -> {
+            contr.next(listview.getSelectionModel().getSelectedItem());
+        });
         //Cell Factory
         libraryview.setCellFactory(c -> {
 
@@ -203,7 +210,7 @@ public  class View extends BorderPane {
 
         return libraryview;
     }
-    public ListView<Song> getPlaylist(){
+    public static ListView<Song> getPlaylist(){
         return listview;
     }
     public void setList(ListView<Song> list) {

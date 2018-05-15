@@ -4,6 +4,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import model.Model;
 import interfaces.Song;
+import view.ShowError;
 import view.View;
 
 import java.io.File;
@@ -65,14 +66,77 @@ public class Controller{
     }
     public void play(Song s)
     {
+        //musik abspielen
 
-        // Musik abspielen
+            try {
+                model.setplayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
+                model.getplayer().play();
+            }
+            catch (NullPointerException e)
+            {
 
-        model.setplayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
-        model.getplayer().play();
+               try
+               {
+                   model.setplayer(new MediaPlayer(new Media(new File( model.getPlaylist().findSongByID(0).getPath()).toURI().toString())));
+                   View.getPlaylist().getSelectionModel().select(0);
+                   model.getplayer().play();
+               }
+               catch(NullPointerException f)
+                {
+                    this.PlaylistEmptyError();
+                }
 
-        // Pfad bestimmen
-        // wenn ausgewählter song 0 dann erster Song aus Playlist
+            }
+
+
 
     }
+    public void pause()
+    {
+        try
+        {
+            model.getplayer().pause();
+        }catch (NullPointerException e)
+        {
+            PlaylistEmptyError();
+        }
+
+    }
+    public  void next(Song s)
+    {
+            long id;
+            try {
+
+                id = s.getId()+1;
+                if(id <= model.getPlaylist().size()-1 )
+                {
+                    // id des Songs neu setzten
+                    View.getPlaylist().getSelectionModel().select((int) id);
+                    play(View.getPlaylist().getSelectionModel().getSelectedItem());
+                }
+                else
+                {
+                    // Song null abspielen Playlist von vorne starten
+                    View.getPlaylist().getSelectionModel().select(0);
+                    play(View.getPlaylist().getSelectionModel().getSelectedItem());
+                }
+
+            }
+            catch (NullPointerException e)
+            {
+                // falls kein Song ausgewählt ist wird hier einfach Play aufgerufen sodass der erste songe gespielt wird
+                this.play(s);
+            }
+
+
+
+    }
+     // Eventuelle Fehler Kontrollklasse  ?
+
+   private void PlaylistEmptyError()
+   {
+       ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
+   }
+
+
 }
