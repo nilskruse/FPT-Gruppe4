@@ -178,6 +178,7 @@ public  class View extends BorderPane {
                     isPlaying = true;
             } else {
                 playButton.setSelected(false);
+                contr.PlaylistEmptyError();
             }
         });
 
@@ -188,10 +189,14 @@ public  class View extends BorderPane {
                 playButton.setSelected(false);
                 isPlaying = false;
             } else{
-            pauseButton.setSelected(false);}
+                pauseButton.setSelected(false);
+                contr.PlaylistEmptyError();
+            }
         });
         nextButton.setOnAction( e -> {
             contr.next(listview.getSelectionModel().getSelectedItem());
+            playButton.setSelected(true);
+            pauseButton.setSelected(false);
         });
         //Cell Factory
         libraryview.setCellFactory(c -> {
@@ -236,7 +241,7 @@ public  class View extends BorderPane {
 
         return libraryview;
     }
-    public ListView<Song> getPlaylist(){
+    public static ListView<Song> getPlaylist(){
         return listview;
     }
     public void setList(ListView<Song> list) {

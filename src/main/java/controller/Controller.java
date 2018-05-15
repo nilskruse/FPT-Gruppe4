@@ -134,7 +134,7 @@ public class Controller{
     }
      // Eventuelle Fehler Kontrollklasse  ?
 
-   private void PlaylistEmptyError()
+  public void PlaylistEmptyError()
    {
        ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
    }
