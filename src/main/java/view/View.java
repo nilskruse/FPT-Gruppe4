@@ -53,7 +53,8 @@ public  class View extends BorderPane {
     private ComboBox dropdown = new ComboBox();
     private Button loadButton = new Button("Load");
     private Button saveButton = new Button("Save");
-   // Playtime soll runterlaufen
+
+    // Playtime soll runterlaufen
     private Text playTime = new Text("0:00");
 
     //Bottom
@@ -190,13 +191,20 @@ public  class View extends BorderPane {
                 isPlaying = false;
             } else{
                 pauseButton.setSelected(false);
-                contr.PlaylistEmptyError();
+                contr.PlaylistNotPlayError();
             }
         });
         nextButton.setOnAction( e -> {
-            contr.next(listview.getSelectionModel().getSelectedItem());
-            playButton.setSelected(true);
-            pauseButton.setSelected(false);
+            if(isPlaying = !listview.getProperties().isEmpty()) {
+                contr.next(listview.getSelectionModel().getSelectedItem());
+                playButton.setSelected(true);
+                pauseButton.setSelected(false);
+            }
+            else{
+
+                contr.PlaylistEmptyError();
+            }
+
         });
         //Cell Factory
         libraryview.setCellFactory(c -> {

@@ -101,7 +101,7 @@ public class Controller{
             model.getPlayer().pause();
         }catch (NullPointerException e)
         {
-            PlaylistEmptyError();
+            PlaylistNotPlayError();
         }
 
     }
@@ -144,4 +144,7 @@ public class Controller{
    }
 
 
+    public void PlaylistNotPlayError() {
+        ShowError.infoBox("Bitte starte erst ein Lied bevor du es pausierst.", "Fehler beim pausieren");
+    }
 }
