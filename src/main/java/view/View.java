@@ -2,8 +2,6 @@ package view;
 
 import controller.Controller;
 import interfaces.Song;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,13 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
-import model.Playlist;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URL;
 
 
 public  class View extends BorderPane {
@@ -25,6 +20,8 @@ public  class View extends BorderPane {
     private Controller contr;
     private ListView<Song> listview = new ListView<>();
     private ListView<Song> libraryview = new ListView<>();
+    private boolean isPlaying = false;
+
 
     //private Button buttonAdd = new Button("Add all");
     //private Button buttonDelete = new Button("Delete");
@@ -39,8 +36,9 @@ public  class View extends BorderPane {
     private TextField albumInput = new TextField();
 
     //Metadata controls (to-do: use icons from assets instead
-    private Button playButton = new Button();
-    private Button pauseButton = new Button();
+    private ToggleGroup controlGroup = new ToggleGroup();
+    private ToggleButton playButton = new ToggleButton();
+    private ToggleButton pauseButton = new ToggleButton();
     private Button nextButton = new Button();
     private Button commitButton = new Button("Commit");
     private Button deleteButton = new Button("Delete");
@@ -51,7 +49,7 @@ public  class View extends BorderPane {
     private Button loadButton = new Button("Load");
     private Button saveButton = new Button("Save");
    // Playtime soll runterlaufen
-    private Text playTime = new Text("0:14");
+    private Text playTime = new Text("0:00");
 
     //Bottom
     private Button addAllButton = new Button("Add all");
@@ -86,6 +84,11 @@ public  class View extends BorderPane {
         nextButton.setGraphic(this.setIcon(nextImg));
         playButton.setGraphic(this.setIcon(playImg));
         pauseButton.setGraphic(this.setIcon(pauseImg));
+        playButton.setToggleGroup(controlGroup);
+        pauseButton.setToggleGroup(controlGroup);
+        playButton.setSelected(false);
+        pauseButton.setSelected(false);
+
 
         HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
@@ -147,19 +150,41 @@ public  class View extends BorderPane {
         });
 
         addToPlaylistButton.setOnAction(e ->{
-            if(libraryview.getSelectionModel().getSelectedItem() instanceof Song) {
+            if(libraryview.getSelectionModel().getSelectedItem() != null) {
                 contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
             }
         } );
 
         deleteButton.setOnAction(e ->{
-            contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
+            if(listview.getSelectionModel().getSelectedItem() != null) {
+                contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
+            }});
+
+        //am besten Bindings--> Button&listview mit Changelistener
+        playButton.setOnAction(e -> {
+            if(!listview.getItems().isEmpty()){
+                if(listview.getSelectionModel().isEmpty()) {
+                    listview.getSelectionModel().selectFirst();
+                }
+                    contr.play(listview.getSelectionModel().getSelectedItem());
+                    playButton.setSelected(true);
+                    pauseButton.setSelected(false);
+                    playTime.setText("");
+                    isPlaying = true;
+            } else {
+                playButton.setSelected(false);
+            }
         });
 
-        playButton.setOnAction( e -> {
-            contr.play(listview.getSelectionModel().getSelectedItem());
+        pauseButton.setOnAction(e -> {
+            if(isPlaying = !listview.getProperties().isEmpty()) {
+                contr.pause();
+                pauseButton.setSelected(true);
+                playButton.setSelected(false);
+                isPlaying = false;
+            } else{
+            pauseButton.setSelected(false);}
         });
-
         //Cell Factory
         libraryview.setCellFactory(c -> {
 

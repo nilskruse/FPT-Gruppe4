@@ -11,6 +11,7 @@ public class Model{
     private Playlist playlist = new Playlist();
     private MediaPlayer player ;
 
+
     public Playlist getLibrary() {
 
         return library;
@@ -24,9 +25,10 @@ public class Model{
 
         return player;
     }
-    public void  setplayer(MediaPlayer player) {
+    public void setplayer(MediaPlayer player) {
 
         this.player = player;
     }
+
 
 }

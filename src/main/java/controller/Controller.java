@@ -9,6 +9,7 @@ import view.View;
 import java.io.File;
 import java.io.IOException;
 
+
 public class Controller{
 
     private Model model;
@@ -65,14 +66,20 @@ public class Controller{
     }
     public void play(Song s)
     {
-
-        // Musik abspielen
-
         model.setplayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
         model.getplayer().play();
+        System.out.println(model.getplayer().getStatus());
 
-        // Pfad bestimmen
-        // wenn ausgewählter song 0 dann erster Song aus Playlist
+
+        //to do play when stopped
 
     }
+
+    public void pause(){
+        model.getplayer().pause();
+    }
+
+
+
+
 }
