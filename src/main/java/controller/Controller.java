@@ -112,7 +112,7 @@ public class Controller{
                 if(id <= model.getPlaylist().size()-1 )
                 {
                     // id des Songs neu setzten
-                    View.getPlaylist().getSelectionModel().select((int) id);
+                    View.getPlaylist().getSelectionModel().select((int) id - 1);
                     play(View.getPlaylist().getSelectionModel().getSelectedItem());
                 }
                 else
