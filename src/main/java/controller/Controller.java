@@ -62,9 +62,6 @@ public class Controller {
         s.setTitle(title);
         s.setAlbum(album);
         s.setInterpret(interpret);
-
-        model.getPlayer().getBufferProgressTime().toMinutes();
-
     }
 
 
