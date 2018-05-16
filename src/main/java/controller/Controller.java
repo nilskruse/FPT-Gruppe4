@@ -105,16 +105,16 @@ public class Controller {
             Duration d = (Duration) newVal;
             Duration tD = model.getPlayer().getTotalDuration();
             String r,s;
-            if((int)(d.toSeconds() % 60) > 9){
-                r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
-            }else{
+            if(((int)d.toSeconds() % 60) < 10){
                 r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
+            }else{
+                r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
             }
 
-            if((int)(d.toSeconds() % 60) > 9){
-                s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
-            }else{
+            if(((int) tD.toSeconds() % 60) < 10){
                 s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
+            }else{
+                s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
             }
 
             view.getPlayTime().setText(r + " / " + s);
