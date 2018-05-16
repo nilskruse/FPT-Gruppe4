@@ -101,11 +101,11 @@ public  class View extends BorderPane {
         controls.setPadding(paddingMeta);
 
         addToPlaylistButton.setMinWidth(100);
-        HBox addToPlaylistControl = new HBox(addToPlaylistButton);
+        HBox addToPlaylistControl = new HBox(addToPlaylistButton, deleteButton);
         addToPlaylistControl.setPadding(new Insets(8,0,8,2));
         addToPlaylistControl.setStyle("-fx-border-style: solid;"
                 + "-fx-border-width: 0.1;" + "-fx-border-color: black;");
-        VBox metadata = new VBox(title, titleInput, interpret, interpretInput, album, albumInput, controls, addToPlaylistControl, deleteButton);
+        VBox metadata = new VBox(title, titleInput, interpret, interpretInput, album, albumInput, controls, addToPlaylistControl);
 
 
         //Top
@@ -193,7 +193,7 @@ public  class View extends BorderPane {
                 isPlaying = false;
             } else{
                 pauseButton.setSelected(false);
-                contr.PlaylistEmptyError();
+                contr.PlaylistNotPlayError();
             }
         });
         nextButton.setOnAction( e -> {

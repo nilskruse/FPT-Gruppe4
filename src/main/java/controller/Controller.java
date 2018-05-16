@@ -64,6 +64,13 @@ public class Controller {
 
     public void play(int index) {
 
+        //If no different song is selected resume playback of paused song
+        if(model.getPlayer() != null && songPointer == index && model.getPlayer().getStatus() == MediaPlayer.Status.PAUSED){
+            model.getPlayer().play();
+            return;
+        }
+
+        //dispose of old MediaPlayer object
         if (model.getPlayer() != null) {
             model.getPlayer().dispose();
         }
@@ -75,7 +82,7 @@ public class Controller {
         } catch (NullPointerException e) {
 
             try {
-                model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().findSongByID(1).getPath()).toURI().toString())));
+                model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().get(0).getPath()).toURI().toString())));
                 view.getPlaylist().getSelectionModel().select(0);
                 model.getPlayer().play();
             } catch (NullPointerException f) {
@@ -98,7 +105,7 @@ public class Controller {
         }
         MediaPlayer.Status status = model.getPlayer().getStatus();
 
-        if(status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED){
+        if(model.getPlayer() != null &&( status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED)){
             PlaylistNotPlayError();
         }
 
