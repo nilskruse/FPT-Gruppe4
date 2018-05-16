@@ -92,10 +92,14 @@ public class Controller {
 
 
     public void pause() {
-        try {
+
+        if(model.getPlayer() != null){
             model.getPlayer().pause();
-        } catch (NullPointerException e) {
-            PlaylistEmptyError();
+        }
+        MediaPlayer.Status status = model.getPlayer().getStatus();
+
+        if(status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED){
+            PlaylistNotPlayError();
         }
 
 
@@ -150,11 +154,16 @@ public class Controller {
             }
         }
     }
-
+    public boolean isPlaying(){
+        return model.getPlayer().getStatus() == MediaPlayer.Status.PLAYING;
+    }
     // Eventuelle Fehler Kontrollklasse  ?
 
     public void PlaylistEmptyError() {
         ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
+    }
+    public void PlaylistNotPlayError() {
+        ShowError.infoBox("Bitte starte erst ein Lied bevor du es pausierst.", "Fehler beim pausieren");
     }
 
 

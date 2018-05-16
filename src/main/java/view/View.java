@@ -128,7 +128,7 @@ public  class View extends BorderPane {
 
         //Actions
         libraryview.setOnMouseClicked(e -> {
-            if(!libraryview.getProperties().isEmpty()) {
+            if(!libraryview.getProperties().isEmpty() ) {
                 titleInput.setText(libraryview.getSelectionModel().getSelectedItem().getTitle());
                 albumInput.setText(libraryview.getSelectionModel().getSelectedItem().getAlbum());
                 interpretInput.setText(libraryview.getSelectionModel().getSelectedItem().getInterpret());
@@ -146,7 +146,9 @@ public  class View extends BorderPane {
 
         });
         commitButton.setOnAction(e ->{
-            contr.changeSongProperties(selectedSong,titleInput.getText(),albumInput.getText(),interpretInput.getText());
+            if( selectedSong != null) {
+                contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
+            }
             listview.refresh();
             libraryview.refresh();
         });
