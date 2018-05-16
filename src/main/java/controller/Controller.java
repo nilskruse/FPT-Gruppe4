@@ -11,137 +11,151 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class Controller{
+public class Controller {
 
     private Model model;
+    private View view;
+    private int songPointer;
+    private boolean firstMediaPlayerInitilization = true;
 
-    public void link(Model model, View view){
+    public void link(Model model, View view) {
         this.model = model;
+        this.view = view;
         view.getList().setItems(model.getLibrary());
         view.getPlaylist().setItems(model.getPlaylist());
         view.addController(this);
         addSongsFromFolder(model);
+
+
     }
-    public void add(Song s){
+
+    public void add(Song s) {
 
         model.getLibrary().addSong(s);
     }
-    public void addToPlaylist(Song s){
+
+    public void addToPlaylist(Song s) {
         model.getPlaylist().addSong(s);
         //model.getLibrary().deleteSong(s);
     }
-    public void addAllToPlaylist(){
-        for(Song s : model.getLibrary()){
+
+    public void addAllToPlaylist() {
+        for (Song s : model.getLibrary()) {
             model.getPlaylist().addSong(s);
         }
     }
-    public void deleteSongFromPlaylist(Song s){
-        model.getPlaylist().deleteSong(s);
+
+    public void deleteSongFromPlaylist(int index) {
+
+        if(songPointer == index){
+            model.getPlayer().dispose();
+        }
+        model.getPlaylist().remove(index);
+
     }
-    public void changeSongProperties(Song s, String title, String album, String interpret ) {
+
+    public void changeSongProperties(Song s, String title, String album, String interpret) {
         s.setTitle(title);
         s.setAlbum(album);
         s.setInterpret(interpret);
+    }
+
+
+
+    public void play(int index) {
+
+        if (model.getPlayer() != null) {
+            model.getPlayer().dispose();
+        }
+
+        try {
+            model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().get(index).getPath()).toURI().toString())));
+            model.getPlayer().play();
+            songPointer = index;
+        } catch (NullPointerException e) {
+
+            try {
+                model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().findSongByID(1).getPath()).toURI().toString())));
+                view.getPlaylist().getSelectionModel().select(0);
+                model.getPlayer().play();
+            } catch (NullPointerException f) {
+                this.PlaylistEmptyError();
+            }
+
+        }
+
+        // da die MediaPlayer überschrieben werden, muss das Event immer wieder neu gesetzt werden
+        model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
+
+    }
+
+
+
+    public void pause() {
+        try {
+            model.getPlayer().pause();
+        } catch (NullPointerException e) {
+            PlaylistEmptyError();
+        }
 
 
     }
 
-    public void addSongsFromFolder(Model model){
+    public void next() {
+
+        if(model.getPlaylist().isEmpty()){
+            PlaylistEmptyError();
+            return;
+        }
+        try {
+
+            if (songPointer + 1 < model.getPlaylist().size()) {
+                // id des Songs neu setzten
+                view.getPlaylist().getSelectionModel().select(songPointer + 1);
+                play(songPointer + 1);
+            } else {
+                // Song null abspielen Playlist von vorne starten
+                view.getPlaylist().getSelectionModel().select(0);
+                play(0);
+            }
+
+        } catch (NullPointerException e) {
+            // falls kein Song ausgewählt ist wird hier einfach Play aufgerufen sodass der erste songe gespielt wird
+            this.play(0);
+        }
+
+
+    }
+
+    private void endOfMediaEvent() {
+        next();
+    }
+
+    public void addSongsFromFolder(Model model) {
         long id = model.getLibrary().size() + 1;
         // initialize File object
         File file = new File("songs");
 
         // check if the specified pathname is directory first
-        if(file.isDirectory()){
+        if (file.isDirectory()) {
             //list all files on directory
             File[] files = file.listFiles();
-            for(File f:files){
+            for (File f : files) {
                 try {
-                    model.getLibrary().addSong(new model.Song(f.getName(),"","",f.getCanonicalPath(),id));
+                    add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), id));
                     id++;
-                } catch (IOException e) {
+                } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-    public void play(Song s)
-    {
-            if(model.getPlayer() != null)
-            {
-                model.getPlayer().dispose();
-            }
 
-            try {
-                model.setPlayer(new MediaPlayer(new Media(new File( s.getPath()).toURI().toString())));
-                model.getPlayer().play();
-            }
-            catch (NullPointerException e)
-            {
+    // Eventuelle Fehler Kontrollklasse  ?
 
-               try
-               {
-                   model.setPlayer(new MediaPlayer(new Media(new File( model.getPlaylist().findSongByID(1).getPath()).toURI().toString())));
-                   View.getPlaylist().getSelectionModel().select(0);
-                   model.getPlayer().play();
-               }
-               catch(NullPointerException f)
-                {
-                    this.PlaylistEmptyError();
-                }
-
-            }
-
+    public void PlaylistEmptyError() {
+        ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
     }
-
-    public void pause()
-    {
-        try
-        {
-            model.getPlayer().pause();
-        }catch (NullPointerException e)
-        {
-            PlaylistEmptyError();
-        }
-
-    }
-    public  void next(Song s)
-    {
-
-            long id;
-            try {
-
-                id = s.getId()+1;
-                if(id <= model.getPlaylist().size() )
-                {
-                    // id des Songs neu setzten
-                    View.getPlaylist().getSelectionModel().select((int) id - 1);
-                    play(View.getPlaylist().getSelectionModel().getSelectedItem());
-                }
-                else
-                {
-                    // Song null abspielen Playlist von vorne starten
-                    View.getPlaylist().getSelectionModel().select(0);
-                    play(View.getPlaylist().getSelectionModel().getSelectedItem());
-                }
-
-            }
-            catch (NullPointerException e)
-            {
-                // falls kein Song ausgewählt ist wird hier einfach Play aufgerufen sodass der erste songe gespielt wird
-                this.play(s);
-            }
-
-
-
-
-    }
-     // Eventuelle Fehler Kontrollklasse  ?
-
-  public void PlaylistEmptyError()
-   {
-       ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
-   }
 
 
 }

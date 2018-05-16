@@ -150,9 +150,8 @@ public  class View extends BorderPane {
             listview.refresh();
             libraryview.refresh();
         });
-        addAllButton.setOnAction(e->{
-            contr.addAllToPlaylist();
-        });
+
+        addAllButton.setOnAction(e-> contr.addAllToPlaylist());
 
         addToPlaylistButton.setOnAction(e ->{
             if(libraryview.getSelectionModel().getSelectedItem() instanceof Song) {
@@ -162,8 +161,10 @@ public  class View extends BorderPane {
 
         deleteButton.setOnAction(e ->{
             if(listview.getSelectionModel().getSelectedItem() != null) {
-                contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedItem());
-            }});
+                contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedIndex());
+            }
+            listview.refresh();
+        });
 
         //am besten Bindings--> Button&listview mit Changelistener
         playButton.setOnAction(e -> {
@@ -171,7 +172,7 @@ public  class View extends BorderPane {
                 if(listview.getSelectionModel().isEmpty()) {
                     listview.getSelectionModel().selectFirst();
                 }
-                    contr.play(listview.getSelectionModel().getSelectedItem());
+                    contr.play(listview.getSelectionModel().getSelectedIndex());
                     playButton.setSelected(true);
                     pauseButton.setSelected(false);
                     playTime.setText("");
@@ -194,7 +195,7 @@ public  class View extends BorderPane {
             }
         });
         nextButton.setOnAction( e -> {
-            contr.next(listview.getSelectionModel().getSelectedItem());
+            contr.next();
             playButton.setSelected(true);
             pauseButton.setSelected(false);
         });
@@ -241,8 +242,10 @@ public  class View extends BorderPane {
 
         return libraryview;
     }
-    public static ListView<Song> getPlaylist(){
+    public ListView<Song> getPlaylist(){
+
         return listview;
+
     }
     public void setList(ListView<Song> list) {
 
