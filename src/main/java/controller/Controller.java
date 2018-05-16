@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import model.Model;
 import interfaces.Song;
 import view.ShowError;
@@ -51,6 +54,7 @@ public class Controller {
             model.getPlayer().dispose();
         }
         model.getPlaylist().remove(index);
+        view.getPlayTime().setText("0:00 / 0:00");
 
     }
 
@@ -58,6 +62,9 @@ public class Controller {
         s.setTitle(title);
         s.setAlbum(album);
         s.setInterpret(interpret);
+
+        model.getPlayer().getBufferProgressTime().toMinutes();
+
     }
 
 
@@ -93,9 +100,28 @@ public class Controller {
 
         // da die MediaPlayer überschrieben werden, muss das Event immer wieder neu gesetzt werden
         model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
+        model.getPlayer().currentTimeProperty().addListener((ChangeListener) (o, oldVal, newVal) -> {
+
+            Duration d = (Duration) newVal;
+            Duration tD = model.getPlayer().getTotalDuration();
+            String r,s;
+            if((int)(d.toSeconds() % 60) > 9){
+                r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
+            }else{
+                r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
+            }
+
+            if((int)(d.toSeconds() % 60) > 9){
+                s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
+            }else{
+                s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
+            }
+
+            view.getPlayTime().setText(r + " / " + s);
+
+        });
 
     }
-
 
 
     public void pause() {

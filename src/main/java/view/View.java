@@ -53,8 +53,11 @@ public  class View extends BorderPane {
     private ComboBox dropdown = new ComboBox();
     private Button loadButton = new Button("Load");
     private Button saveButton = new Button("Save");
-   // Playtime soll runterlaufen
-    private Text playTime = new Text("0:00");
+
+
+
+    // Playtime soll runterlaufen
+    private Text playTime = new Text("0:00 / 0:00");
 
     //Bottom
     private Button addAllButton = new Button("Add all");
@@ -177,7 +180,6 @@ public  class View extends BorderPane {
                     contr.play(listview.getSelectionModel().getSelectedIndex());
                     playButton.setSelected(true);
                     pauseButton.setSelected(false);
-                    playTime.setText("");
                     isPlaying = true;
             } else {
                 playButton.setSelected(false);
@@ -256,6 +258,14 @@ public  class View extends BorderPane {
     public void addController(Controller contr){
 
         this.contr = contr;
+    }
+
+    public Text getPlayTime() {
+        return playTime;
+    }
+
+    public void setPlayTime(Text playTime) {
+        this.playTime = playTime;
     }
 
 
