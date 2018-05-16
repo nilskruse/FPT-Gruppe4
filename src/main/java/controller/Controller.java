@@ -47,7 +47,7 @@ public class Controller {
 
     public void deleteSongFromPlaylist(int index) {
 
-        if(songPointer == index){
+        if(songPointer == index && model.getPlayer() != null){
             model.getPlayer().dispose();
         }
         model.getPlaylist().remove(index);
