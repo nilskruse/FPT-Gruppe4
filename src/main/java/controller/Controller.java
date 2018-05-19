@@ -97,6 +97,8 @@ public class Controller {
 
         // da die MediaPlayer überschrieben werden, muss das Event immer wieder neu gesetzt werden
         model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
+
+        //Zeit anzeigen
         model.getPlayer().currentTimeProperty().addListener((ChangeListener) (o, oldVal, newVal) -> {
 
             Duration d = (Duration) newVal;
