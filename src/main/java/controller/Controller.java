@@ -1,7 +1,9 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import model.Model;
 import interfaces.Song;
 import view.ShowError;
@@ -16,7 +18,6 @@ public class Controller {
     private Model model;
     private View view;
     private int songPointer;
-    private boolean firstMediaPlayerInitilization = true;
 
     public void link(Model model, View view) {
         this.model = model;
@@ -25,18 +26,19 @@ public class Controller {
         view.getPlaylist().setItems(model.getPlaylist());
         view.addController(this);
         addSongsFromFolder(model);
-
-
     }
 
-    public void add(Song s) {
-
+    private void add(Song s) {
         model.getLibrary().addSong(s);
     }
 
-    public void addToPlaylist(Song s) {
-        model.getPlaylist().addSong(s);
-        //model.getLibrary().deleteSong(s);
+    public void addToPlaylist() {
+        Song selectedSongInLibrary = view.getList().getSelectionModel().getSelectedItem();
+        if (selectedSongInLibrary != null) {
+            model.getPlaylist().addSong(selectedSongInLibrary);
+        } else {
+            selectionEmptyError();
+        }
     }
 
     public void addAllToPlaylist() {
@@ -45,70 +47,111 @@ public class Controller {
         }
     }
 
-    public void deleteSongFromPlaylist(int index) {
-
-        if(songPointer == index && model.getPlayer() != null){
-            model.getPlayer().dispose();
-        }
-        model.getPlaylist().remove(index);
-
-    }
-
     public void changeSongProperties(Song s, String title, String album, String interpret) {
-        s.setTitle(title);
-        s.setAlbum(album);
-        s.setInterpret(interpret);
+        try {
+            s.setTitle(title);
+            s.setAlbum(album);
+            s.setInterpret(interpret);
+        } catch(NullPointerException e) {
+            selectionEmptyError();
+        }
+    }
+
+    public void deleteSongFromPlaylist() {
+        try {
+            if (songPointer == view.getPlaylist().getSelectionModel().getSelectedIndex() && model.getPlayer() != null) {
+                model.getPlayer().dispose();
+                view.getPlayButton().setSelected(false);
+            }
+            model.getPlaylist().remove(view.getPlaylist().getSelectionModel().getSelectedIndex());
+            view.getPlayTime().setText("0:00 / 0:00");
+        } catch (NullPointerException | IndexOutOfBoundsException e){
+            selectionEmptyError();
+        }
     }
 
 
+    public void play() {
 
-    public void play(int index) {
+        //If no different song is selected resume playback of paused song
+        if(model.getPlayer() != null && songPointer == view.getPlaylist().getSelectionModel().getSelectedIndex() && model.getPlayer().getStatus() == MediaPlayer.Status.PAUSED){
+            model.getPlayer().play();
+            toggleButton(true);
+            return;
+        }
 
+        //dispose of old MediaPlayer object
         if (model.getPlayer() != null) {
             model.getPlayer().dispose();
         }
 
         try {
-            model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().get(index).getPath()).toURI().toString())));
-            model.getPlayer().play();
-            songPointer = index;
-        } catch (NullPointerException e) {
-
-            try {
-                model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().findSongByID(1).getPath()).toURI().toString())));
-                view.getPlaylist().getSelectionModel().select(0);
-                model.getPlayer().play();
-            } catch (NullPointerException f) {
-                this.PlaylistEmptyError();
+            if(!view.getPlaylist().getSelectionModel().isEmpty()){
+                songPointer = view.getPlaylist().getSelectionModel().getSelectedIndex();
+            } else {
+                //if nothing is selected play first song
+                songPointer = 0;
+                view.getPlaylist().getSelectionModel().select(songPointer);
             }
+            model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().get(songPointer).getPath()).toURI().toString())));
+            model.getPlayer().play();
+            toggleButton(true);
+
+
+            // da die MediaPlayer überschrieben werden, muss das Event immer wieder neu gesetzt werden
+            model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
+
+            //Zeit anzeigen
+            model.getPlayer().currentTimeProperty().addListener((ChangeListener) (o, oldVal, newVal) -> {
+
+                Duration d = (Duration) newVal;
+                Duration tD = model.getPlayer().getTotalDuration();
+                String r,s;
+                if(((int)d.toSeconds() % 60) < 10){
+                    r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
+                }else{
+                    r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
+                }
+
+                if(((int) tD.toSeconds() % 60) < 10){
+                    s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
+                }else{
+                    s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
+                }
+
+                view.getPlayTime().setText(r + " / " + s);
+
+            });
+        } catch (NullPointerException | IndexOutOfBoundsException e) {
+            playlistEmptyError();
+            view.getPlayButton().setSelected(false);
 
         }
-
-        // da die MediaPlayer überschrieben werden, muss das Event immer wieder neu gesetzt werden
-        model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
-
     }
 
 
-
     public void pause() {
+        try {
+            if (!model.getPlaylist().isEmpty()) {
+                model.getPlayer().pause();
+                toggleButton(false);
+            }
+            MediaPlayer.Status status = model.getPlayer().getStatus();
 
-        if(model.getPlayer() != null){
-            model.getPlayer().pause();
+            if (!model.getPlaylist().isEmpty() && (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED)) {
+                playlistNotPlayError();
+                view.getPauseButton().setSelected(false);
+            }
+        } catch (NullPointerException e){
+            playlistNotPlayError();
+            view.getPauseButton().setSelected(false);
         }
-        MediaPlayer.Status status = model.getPlayer().getStatus();
-
-        if(status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED){
-            PlaylistNotPlayError();
-        }
-
-
     }
 
     public void next() {
 
         if(model.getPlaylist().isEmpty()){
-            PlaylistEmptyError();
+            playlistEmptyError();
             return;
         }
         try {
@@ -116,16 +159,17 @@ public class Controller {
             if (songPointer + 1 < model.getPlaylist().size()) {
                 // id des Songs neu setzten
                 view.getPlaylist().getSelectionModel().select(songPointer + 1);
-                play(songPointer + 1);
+                play();
             } else {
                 // Song null abspielen Playlist von vorne starten
                 view.getPlaylist().getSelectionModel().select(0);
-                play(0);
+                play();
             }
 
         } catch (NullPointerException e) {
             // falls kein Song ausgewählt ist wird hier einfach Play aufgerufen sodass der erste songe gespielt wird
-            this.play(0);
+            view.getPlaylist().getSelectionModel().select(0);
+            this.play();
         }
 
 
@@ -135,7 +179,7 @@ public class Controller {
         next();
     }
 
-    public void addSongsFromFolder(Model model) {
+    private void addSongsFromFolder(Model model) {
         long id = model.getLibrary().size() + 1;
         // initialize File object
         File file = new File("songs");
@@ -154,17 +198,22 @@ public class Controller {
             }
         }
     }
-    public boolean isPlaying(){
-        return model.getPlayer().getStatus() == MediaPlayer.Status.PLAYING;
-    }
-    // Eventuelle Fehler Kontrollklasse  ?
 
-    public void PlaylistEmptyError() {
+    private void playlistEmptyError() {
         ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
     }
-    public void PlaylistNotPlayError() {
+    private void playlistNotPlayError() {
         ShowError.infoBox("Bitte starte erst ein Lied bevor du es pausierst.", "Fehler beim pausieren");
     }
 
+    private void selectionEmptyError (){
+        ShowError.infoBox("Es ist kein Lied ausgewählt", "Fehler");
+    }
+
+    //toggleButton method
+    private void toggleButton(boolean isPlaying){
+        view.getPlayButton().setSelected(isPlaying);
+        view.getPauseButton().setSelected(!isPlaying);
+    }
 
 }
