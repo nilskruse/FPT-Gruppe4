@@ -2,8 +2,6 @@ package view;
 
 import controller.Controller;
 import interfaces.Song;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,13 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
-import model.Playlist;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URL;
 
 
 public  class View extends BorderPane {
@@ -27,10 +22,6 @@ public  class View extends BorderPane {
     private ListView<Song> libraryview = new ListView<>();
     private boolean isPlaying = false;
 
-
-    //private Button buttonAdd = new Button("Add all");
-    //private Button buttonDelete = new Button("Delete");
-    //private TextField input = new TextField();
 
     //Metadata - Right
     private Label title = new Label("Title:");
@@ -54,9 +45,7 @@ public  class View extends BorderPane {
     private Button loadButton = new Button("Load");
     private Button saveButton = new Button("Save");
 
-
-
-    // Playtime soll runterlaufen
+    // Playtime
     private Text playTime = new Text("0:00 / 0:00");
 
     //Bottom
@@ -89,6 +78,7 @@ public  class View extends BorderPane {
             e.printStackTrace();
         }
 
+        //PLay/Pause Buttons as Togglegroup
         nextButton.setGraphic(this.setIcon(nextImg));
         playButton.setGraphic(this.setIcon(playImg));
         pauseButton.setGraphic(this.setIcon(pauseImg));
@@ -96,7 +86,6 @@ public  class View extends BorderPane {
         pauseButton.setToggleGroup(controlGroup);
         playButton.setSelected(false);
         pauseButton.setSelected(false);
-
 
         HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
@@ -140,6 +129,9 @@ public  class View extends BorderPane {
         });
 
         listview.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2){
+                contr.play();
+            }
             if(!listview.getProperties().isEmpty()){
                 titleInput.setText(listview.getSelectionModel().getSelectedItem().getTitle());
                 albumInput.setText(listview.getSelectionModel().getSelectedItem().getAlbum());
@@ -148,8 +140,9 @@ public  class View extends BorderPane {
             }
 
         });
+
         commitButton.setOnAction(e ->{
-            if( selectedSong != null) {
+            if(selectedSong != null) {
                 contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
             }
             listview.refresh();
@@ -165,44 +158,22 @@ public  class View extends BorderPane {
         } );
 
         deleteButton.setOnAction(e ->{
-            if(listview.getSelectionModel().getSelectedItem() != null) {
-                contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedIndex());
-            }
+            contr.deleteSongFromPlaylist();
             listview.refresh();
         });
 
-        //am besten Bindings--> Button&listview mit Changelistener
         playButton.setOnAction(e -> {
-            if(!listview.getItems().isEmpty()){
-                if(listview.getSelectionModel().isEmpty()) {
-                    listview.getSelectionModel().selectFirst();
-                }
-                    contr.play(listview.getSelectionModel().getSelectedIndex());
-                    playButton.setSelected(true);
-                    pauseButton.setSelected(false);
-                    isPlaying = true;
-            } else {
-                playButton.setSelected(false);
-                contr.PlaylistEmptyError();
-            }
+            contr.play();
         });
 
         pauseButton.setOnAction(e -> {
-            if(isPlaying = !listview.getProperties().isEmpty()) {
-                contr.pause();
-                pauseButton.setSelected(true);
-                playButton.setSelected(false);
-                isPlaying = false;
-            } else{
-                pauseButton.setSelected(false);
-                contr.PlaylistNotPlayError();
-            }
+            contr.pause();
         });
+
         nextButton.setOnAction( e -> {
             contr.next();
-            playButton.setSelected(true);
-            pauseButton.setSelected(false);
         });
+
         //Cell Factory
         libraryview.setCellFactory(c -> {
 
@@ -241,7 +212,6 @@ public  class View extends BorderPane {
         });
     }
 
-
     public ListView<Song> getList() {
 
         return libraryview;
@@ -268,5 +238,12 @@ public  class View extends BorderPane {
         this.playTime = playTime;
     }
 
+    public ToggleButton getPlayButton() {
+        return playButton;
+    }
+
+    public ToggleButton getPauseButton() {
+        return pauseButton;
+    }
 
 }
