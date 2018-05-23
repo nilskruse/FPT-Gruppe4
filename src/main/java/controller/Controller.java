@@ -132,7 +132,7 @@ public class Controller {
 
     public void pause() {
         try {
-            if (!model.getPlaylist().isEmpty()) {
+            if (model.getPlaylist().isEmpty()) {
                 model.getPlayer().pause();
                 toggleButton(false);
             }
