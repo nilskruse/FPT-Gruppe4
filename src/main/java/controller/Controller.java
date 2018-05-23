@@ -18,8 +18,6 @@ public class Controller {
     private Model model;
     private View view;
     private int songPointer;
-    private boolean firstMediaPlayerInitilization = true;
-    private boolean isPlaying;
 
     public void link(Model model, View view) {
         this.model = model;
@@ -30,24 +28,32 @@ public class Controller {
         addSongsFromFolder(model);
     }
 
-    //toggleButton method
-    public void toggleButton(boolean isPlaying){
-        view.getPlayButton().setSelected(isPlaying);
-        view.getPauseButton().setSelected(!isPlaying);
-    }
-
-    public void add(Song s) {
+    private void add(Song s) {
         model.getLibrary().addSong(s);
     }
 
-    public void addToPlaylist(Song s) {
-
-        model.getPlaylist().addSong(s);
+    public void addToPlaylist() {
+        Song selectedSongInLibrary = view.getList().getSelectionModel().getSelectedItem();
+        if (selectedSongInLibrary != null) {
+            model.getPlaylist().addSong(selectedSongInLibrary);
+        } else {
+            selectionEmptyError();
+        }
     }
 
     public void addAllToPlaylist() {
         for (Song s : model.getLibrary()) {
             model.getPlaylist().addSong(s);
+        }
+    }
+
+    public void changeSongProperties(Song s, String title, String album, String interpret) {
+        try {
+            s.setTitle(title);
+            s.setAlbum(album);
+            s.setInterpret(interpret);
+        } catch(NullPointerException e) {
+            selectionEmptyError();
         }
     }
 
@@ -60,15 +66,10 @@ public class Controller {
             model.getPlaylist().remove(view.getPlaylist().getSelectionModel().getSelectedIndex());
             view.getPlayTime().setText("0:00 / 0:00");
         } catch (NullPointerException | IndexOutOfBoundsException e){
-            SelectionEmptyError();
+            selectionEmptyError();
         }
     }
 
-    public void changeSongProperties(Song s, String title, String album, String interpret) {
-        s.setTitle(title);
-        s.setAlbum(album);
-        s.setInterpret(interpret);
-    }
 
     public void play() {
 
@@ -122,7 +123,7 @@ public class Controller {
 
             });
         } catch (NullPointerException | IndexOutOfBoundsException e) {
-            PlaylistEmptyError();
+            playlistEmptyError();
             view.getPlayButton().setSelected(false);
 
         }
@@ -138,11 +139,11 @@ public class Controller {
             MediaPlayer.Status status = model.getPlayer().getStatus();
 
             if (!model.getPlaylist().isEmpty() && (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED)) {
-                PlaylistNotPlayError();
+                playlistNotPlayError();
                 view.getPauseButton().setSelected(false);
             }
         } catch (NullPointerException e){
-            PlaylistNotPlayError();
+            playlistNotPlayError();
             view.getPauseButton().setSelected(false);
         }
     }
@@ -150,7 +151,7 @@ public class Controller {
     public void next() {
 
         if(model.getPlaylist().isEmpty()){
-            PlaylistEmptyError();
+            playlistEmptyError();
             return;
         }
         try {
@@ -178,7 +179,7 @@ public class Controller {
         next();
     }
 
-    public void addSongsFromFolder(Model model) {
+    private void addSongsFromFolder(Model model) {
         long id = model.getLibrary().size() + 1;
         // initialize File object
         File file = new File("songs");
@@ -198,16 +199,21 @@ public class Controller {
         }
     }
 
-    public void PlaylistEmptyError() {
+    private void playlistEmptyError() {
         ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
     }
-    public void PlaylistNotPlayError() {
+    private void playlistNotPlayError() {
         ShowError.infoBox("Bitte starte erst ein Lied bevor du es pausierst.", "Fehler beim pausieren");
     }
 
-    public void SelectionEmptyError (){
-        ShowError.infoBox("Es ist kein Lied ausgewählt", "Fehler beim löschen");
+    private void selectionEmptyError (){
+        ShowError.infoBox("Es ist kein Lied ausgewählt", "Fehler");
     }
 
+    //toggleButton method
+    private void toggleButton(boolean isPlaying){
+        view.getPlayButton().setSelected(isPlaying);
+        view.getPauseButton().setSelected(!isPlaying);
+    }
 
 }

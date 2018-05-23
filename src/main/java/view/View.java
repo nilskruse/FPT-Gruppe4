@@ -94,6 +94,7 @@ public  class View extends BorderPane {
 
         addToPlaylistButton.setMinWidth(100);
         HBox addToPlaylistControl = new HBox(addToPlaylistButton, deleteButton);
+        addToPlaylistControl.setSpacing(10);
         addToPlaylistControl.setPadding(new Insets(8,0,8,2));
         addToPlaylistControl.setStyle("-fx-border-style: solid;"
                 + "-fx-border-width: 0.1;" + "-fx-border-color: black;");
@@ -142,9 +143,7 @@ public  class View extends BorderPane {
         });
 
         commitButton.setOnAction(e ->{
-            if(selectedSong != null) {
-                contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
-            }
+            contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
             listview.refresh();
             libraryview.refresh();
         });
@@ -152,9 +151,8 @@ public  class View extends BorderPane {
         addAllButton.setOnAction(e-> contr.addAllToPlaylist());
 
         addToPlaylistButton.setOnAction(e ->{
-            if(libraryview.getSelectionModel().getSelectedItem() instanceof Song) {
-                contr.addToPlaylist(libraryview.getSelectionModel().getSelectedItem());
-            }
+            contr.addToPlaylist();
+            listview.refresh();
         } );
 
         deleteButton.setOnAction(e ->{
@@ -244,6 +242,10 @@ public  class View extends BorderPane {
 
     public ToggleButton getPauseButton() {
         return pauseButton;
+    }
+
+    public Song getSelectedSong() {
+        return selectedSong;
     }
 
 }
