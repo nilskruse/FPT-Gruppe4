@@ -197,7 +197,7 @@ public class Controller {
     private void addSongsFromFolder(Model model) {
         long id = model.getLibrary().size() + 1;
         // initialize File object
-        File file = new File("songs");
+        File file = new File("src/main/resources/songs");
 
         // check if the specified pathname is directory first
         if (file.isDirectory()) {

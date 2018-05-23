@@ -69,11 +69,10 @@ public  class View extends BorderPane {
         Image nextImg  = null;
         Image playImg  = null;
         Image pauseImg  = null;
-
         try {
-            nextImg = new Image( new FileInputStream("assets/next.png"));
-            pauseImg = new Image( new FileInputStream("assets/pause.png"));
-            playImg = new Image( new FileInputStream("assets/play.png"));
+            nextImg = new Image( new FileInputStream("src/main/resources/assets/next.png"));
+            pauseImg = new Image( new FileInputStream("src/main/resources/assets/pause.png"));
+            playImg = new Image( new FileInputStream("src/main/resources/assets/play.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
