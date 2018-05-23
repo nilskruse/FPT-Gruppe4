@@ -147,13 +147,13 @@ public class Controller {
 
     public void pause() {
         try {
-            if (model.getPlaylist().isEmpty()) {
+            if (!model.getPlaylist().isEmpty()) {
                 model.getPlayer().pause();
                 toggleButton(false);
             }
             MediaPlayer.Status status = model.getPlayer().getStatus();
 
-            if (!model.getPlaylist().isEmpty() && (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED)) {
+            if (model.getPlaylist().isEmpty() || (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.DISPOSED || status == MediaPlayer.Status.STOPPED)) {
                 playlistNotPlayError();
                 view.getPauseButton().setSelected(false);
             }
