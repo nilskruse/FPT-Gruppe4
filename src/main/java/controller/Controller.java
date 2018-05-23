@@ -6,6 +6,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import model.Model;
 import interfaces.Song;
+import org.apache.commons.lang.ObjectUtils;
 import view.ShowError;
 import view.View;
 
@@ -49,9 +50,16 @@ public class Controller {
 
     public void changeSongProperties(Song s, String title, String album, String interpret) {
         try {
-            s.setTitle(title);
-            s.setAlbum(album);
-            s.setInterpret(interpret);
+            if ( s != null )
+            {
+                s.setTitle(title);
+                s.setAlbum(album);
+                s.setInterpret(interpret);
+            }
+            else
+            {
+                selectionEmptyError();
+            }
         } catch(NullPointerException e) {
             selectionEmptyError();
         }
