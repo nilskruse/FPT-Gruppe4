@@ -43,9 +43,16 @@ public class Controller {
     }
 
     public void addAllToPlaylist() {
-        for (Song s : model.getLibrary()) {
-            model.getPlaylist().addSong(s);
+        if (!model.getLibrary().isEmpty()) {
+            for (Song s : model.getLibrary())
+            {
+                model.getPlaylist().addSong(s);
+            }
+        } else {
+            nothingInPlaylist();
         }
+
+
     }
 
     public void changeSongProperties(Song s, String title, String album, String interpret) {
@@ -198,8 +205,10 @@ public class Controller {
             File[] files = file.listFiles();
             for (File f : files) {
                 try {
-                    add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), id));
-                    id++;
+                    if(f.getName().endsWith(".mp3") || f.getName().endsWith(".m4a")) {
+                        add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), id));
+                        id++;
+                    }
                 } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -215,7 +224,10 @@ public class Controller {
     }
 
     private void selectionEmptyError (){
-        ShowError.infoBox("Es ist kein Lied ausgewählt", "Fehler");
+        ShowError.infoBox("Es ist kein Lied ausgewählt", "Auswahl Fehler");
+    }
+    private void nothingInPlaylist(){
+        ShowError.infoBox("Es sind keine Lieder in der Library", "Library Fehler");
     }
 
     //toggleButton method
