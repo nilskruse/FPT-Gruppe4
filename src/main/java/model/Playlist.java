@@ -24,11 +24,14 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
     }
 
     public void setList(ArrayList<Song> playlist) {
-        this.playlist = playlist;
+        this.clearPlaylist();
+        this.addAll(playlist);
     }
 
     public ArrayList<Song> getList() {
-        return playlist;
+        ArrayList<Song> returnList = new ArrayList<Song>();
+        returnList.addAll(this);
+        return returnList;
     }
 
     @Override
