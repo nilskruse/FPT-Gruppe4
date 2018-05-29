@@ -1,18 +1,12 @@
 package main;
 
+import controller.IDGenerator;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import model.Model;
-import model.Song;
 import view.View;
 import controller.Controller;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class MainClass extends Application{
     public static void main(String[] args) {
@@ -22,6 +16,9 @@ public class MainClass extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        
+
         // hier die Daten verwalten
         Model model = new Model();
 

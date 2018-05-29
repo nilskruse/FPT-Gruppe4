@@ -195,7 +195,6 @@ public class Controller {
     }
 
     private void addSongsFromFolder(Model model) {
-        long id = model.getLibrary().size() + 1;
         // initialize File object
         File file = new File("src/main/resources/songs");
 
@@ -206,10 +205,11 @@ public class Controller {
             for (File f : files) {
                 try {
                     if(f.getName().endsWith(".mp3") || f.getName().endsWith(".m4a")) {
-                        add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), id));
-                        id++;
+                        add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), IDGenerator.getNextID()));
                     }
                 } catch (IOException | NullPointerException e) {
+                    e.printStackTrace();
+                } catch (IDOverFlowException e) {
                     e.printStackTrace();
                 }
             }
