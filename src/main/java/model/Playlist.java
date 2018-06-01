@@ -30,7 +30,7 @@ public class Playlist extends ModifiableObservableListBase<Song> implements inte
 
     public ArrayList<Song> getList() {
         return playlist;
-    }
+}
 
     @Override
     public void clearPlaylist() {

@@ -86,6 +86,7 @@ public  class View extends BorderPane {
         playButton.setSelected(false);
         pauseButton.setSelected(false);
 
+
         HBox controls = new HBox(playButton, pauseButton , nextButton, commitButton);
         controls.setSpacing(10);
         Insets paddingMeta = new Insets(4, 2, 4,2);
@@ -207,6 +208,10 @@ public  class View extends BorderPane {
             return cell;
 
         });
+
+        dropdown.setOnAction(e -> contr.selectStrategy());
+        loadButton.setOnAction(e -> contr.load());
+        saveButton.setOnAction(e -> contr.save());
     }
 
     public ListView<Song> getList() {
@@ -225,6 +230,10 @@ public  class View extends BorderPane {
     public void addController(Controller contr){
 
         this.contr = contr;
+    }
+
+    public ComboBox getDropdown() {
+        return dropdown;
     }
 
     public Text getPlayTime() {

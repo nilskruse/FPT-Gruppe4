@@ -1,5 +1,7 @@
 package interfaces;
 
+import model.Model;
+
 import java.io.IOException;
 
 
@@ -57,7 +59,8 @@ public interface SerializableStrategy {
      */
     Playlist readPlaylist() throws IOException, ClassNotFoundException;
 
-
+    public void load(Model model);
+    public void save(Model model);
 
     /*
      Finish writing/reading by closing all Streams

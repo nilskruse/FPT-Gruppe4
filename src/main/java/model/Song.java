@@ -1,12 +1,33 @@
 package model;
 
+import helper.StringPropertyValueHandler;
 import javafx.beans.property.SimpleStringProperty;
+import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.jdbc.Strategy;
 
-public class Song implements interfaces.Song
+import java.io.*;
+import java.util.ArrayList;
+
+public class Song implements interfaces.Song,Serializable,Externalizable
 {
+    private static final long serialVersionUID = 4256245623546L;
 
-    private SimpleStringProperty path = new SimpleStringProperty(), title = new SimpleStringProperty(), album = new SimpleStringProperty(), interpret = new SimpleStringProperty();
+
+    private transient SimpleStringProperty path = new SimpleStringProperty();
+
+    private transient SimpleStringProperty title = new SimpleStringProperty();
+
+    private transient SimpleStringProperty album = new SimpleStringProperty();
+
+    private transient SimpleStringProperty interpret = new SimpleStringProperty();
+
+
     private long id;
+
+    public Song(){
+
+    }
+
     public Song(String title,String album, String interpret, String path, long id){
         this.setTitle(title);
         this.setAlbum(album);
@@ -85,5 +106,23 @@ public class Song implements interfaces.Song
 
     public long getId() {
         return id;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput s) throws IOException {
+        s.writeObject(title.getValue());
+        s.writeObject(album.getValue());
+        s.writeObject(interpret.getValue());
+        s.writeObject(path.getValue());
+        s.writeLong(id);
+    }
+
+    @Override
+    public void readExternal(ObjectInput s) throws IOException, ClassNotFoundException {
+        title = new SimpleStringProperty((String) s.readObject());
+        album = new SimpleStringProperty((String) s.readObject());
+        interpret = new SimpleStringProperty((String) s.readObject());
+        path = new SimpleStringProperty((String) s.readObject());
+        id = s.readLong();
     }
 }

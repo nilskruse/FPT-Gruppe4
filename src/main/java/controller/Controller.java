@@ -1,6 +1,9 @@
 package controller;
 
+import interfaces.SerializableStrategy;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -12,6 +15,7 @@ import view.View;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class Controller {
@@ -19,18 +23,29 @@ public class Controller {
     private Model model;
     private View view;
     private int songPointer;
+    private Serialization ser = new Serialization();
+    private ObservableList<SerializableStrategy> strats = FXCollections.observableArrayList();
 
     public void link(Model model, View view) {
         this.model = model;
         this.view = view;
         view.getList().setItems(model.getLibrary());
         view.getPlaylist().setItems(model.getPlaylist());
+        view.getDropdown().setItems(strats);
         view.addController(this);
         addSongsFromFolder(model);
+
+        strats.add(new BinaryStrategy());
     }
 
     private void add(Song s) {
-        model.getLibrary().addSong(s);
+
+        try {
+            s.setId(IDGenerator.getNextID());
+            model.getLibrary().addSong(s);
+        } catch (IDOverFlowException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addToPlaylist() {
@@ -205,11 +220,9 @@ public class Controller {
             for (File f : files) {
                 try {
                     if(f.getName().endsWith(".mp3") || f.getName().endsWith(".m4a")) {
-                        add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), IDGenerator.getNextID()));
+                        add(new model.Song(f.getName(), "", "", f.getCanonicalPath(), 0));
                     }
                 } catch (IOException | NullPointerException e) {
-                    e.printStackTrace();
-                } catch (IDOverFlowException e) {
                     e.printStackTrace();
                 }
             }
@@ -234,6 +247,27 @@ public class Controller {
     private void toggleButton(boolean isPlaying){
         view.getPlayButton().setSelected(isPlaying);
         view.getPauseButton().setSelected(!isPlaying);
+    }
+
+    public void selectStrategy(){
+
+        ser.setStrat((SerializableStrategy) view.getDropdown().getSelectionModel().getSelectedItem());
+        System.out.println("select");
+
+    }
+
+    public void load(){
+
+        ser.load(model);
+        System.out.println("load");
+
+    }
+
+    public void save(){
+
+        ser.save(model);
+        System.out.println("save");
+
     }
 
 }
