@@ -20,7 +20,6 @@ public  class View extends BorderPane {
     private Controller contr;
     private static ListView<Song> listview = new ListView<>();
     private ListView<Song> libraryview = new ListView<>();
-    private boolean isPlaying = false;
 
 
     //Metadata - Right

@@ -9,13 +9,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import model.Model;
 import interfaces.Song;
-import org.apache.commons.lang.ObjectUtils;
 import view.ShowError;
 import view.View;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.StreamCorruptedException;
 
 
 public class Controller {
@@ -36,6 +35,7 @@ public class Controller {
         addSongsFromFolder(model);
 
         strats.add(new BinaryStrategy());
+        strats.add(new XMLStrategy());
     }
 
     private void add(Song s) {
@@ -229,6 +229,10 @@ public class Controller {
         }
     }
 
+    private void SelectedStrategyError(){
+        ShowError.infoBox("Bitte wähle eine andere Serialisierungstrategie.", "Serialisierungsfehler");
+    }
+
     private void playlistEmptyError() {
         ShowError.infoBox("Bitte füge Lieder zur Playlist hinzu.", "Fehler beim abspielen");
     }
@@ -257,16 +261,22 @@ public class Controller {
     }
 
     public void load(){
-
-        ser.load(model);
-        System.out.println("load");
+        try {
+            ser.load(model);
+            System.out.println("load");
+        }catch (Exception e){
+            SelectedStrategyError();
+        }
 
     }
 
     public void save(){
-
-        ser.save(model);
-        System.out.println("save");
+        try {
+            ser.save(model);
+            System.out.println("save");
+        }catch (NullPointerException e){
+            SelectedStrategyError();
+        }
 
     }
 
