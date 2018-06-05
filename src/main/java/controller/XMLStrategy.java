@@ -25,25 +25,25 @@ public class XMLStrategy implements SerializableStrategy {
 
     @Override
     public void openWritableLibrary() throws IOException {
-        libraryFO = new FileOutputStream("library.ser");
+        libraryFO = new FileOutputStream("libraryXML.ser");
         libraryEncoder = new XMLEncoder(libraryFO);
     }
 
     @Override
     public void openReadableLibrary() throws IOException {
-        libraryFI = new FileInputStream("library.ser");
+        libraryFI = new FileInputStream("libraryXML.ser");
         libraryDecoder = new XMLDecoder(libraryFI);
     }
 
     @Override
     public void openWritablePlaylist() throws IOException {
-        playlistFO = new FileOutputStream("playlist.ser");
+        playlistFO = new FileOutputStream("playlistXML.ser");
         playlistEncoder = new XMLEncoder(playlistFO);
     }
 
     @Override
     public void openReadablePlaylist() throws IOException {
-        playlistFI = new FileInputStream("playlist.ser");
+        playlistFI = new FileInputStream("playlistXML.ser");
         playlistDecoder = new XMLDecoder(playlistFI);
     }
 
