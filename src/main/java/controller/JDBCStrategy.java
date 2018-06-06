@@ -6,7 +6,12 @@ import interfaces.Song;
 import model.Model;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.*;
+import java.util.Calendar;
 
 public class JDBCStrategy implements SerializableStrategy {
 
@@ -24,10 +29,7 @@ public class JDBCStrategy implements SerializableStrategy {
 
     private static void createPlaylist(Connection con) {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Playlist (" +
-                "id integer PRIMARY KEY, " +
-                "title text, " +
-                "artist text, " +
-                "path text);")) {
+                "id integer);")) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,7 +119,27 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void writePlaylist(Playlist p) throws IOException {
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+             PreparedStatement drop = con.prepareStatement("DELETE FROM Playlist")) {
 
+            drop.executeUpdate();
+            createPlaylist(con);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (id) VALUES (?)")) {
+
+
+            for(Song s : p){
+                pstmt.setInt(1,(int)s.getId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -134,6 +156,7 @@ public class JDBCStrategy implements SerializableStrategy {
     public void save(Model model) {
         try {
             writeLibrary(model.getLibrary());
+            writePlaylist(model.getPlaylist());
         } catch (IOException e) {
             e.printStackTrace();
         }
