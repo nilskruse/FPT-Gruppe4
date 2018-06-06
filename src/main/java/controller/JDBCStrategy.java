@@ -50,11 +50,7 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void openWritablePlaylist() throws IOException {
-        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db")) {
-            createPlaylist(con);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
 
     }
 
@@ -75,7 +71,18 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void writeLibrary(Playlist p) throws IOException {
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,artist,path) VALUES (?,?,?)")) {
+            createLibrary(con);
+            for(Song s : p){
+                pstmt.setString(1,s.getTitle());
+                pstmt.setString(2,s.getInterpret());
+                pstmt.setString(3,s.getPath());
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -100,7 +107,11 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void save(Model model) {
-
+        try {
+            writeLibrary(model.getLibrary());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
