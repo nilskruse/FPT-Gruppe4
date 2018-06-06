@@ -119,10 +119,8 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void writePlaylist(Playlist p) throws IOException {
-        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement drop = con.prepareStatement("DELETE FROM Playlist")) {
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db")) {
 
-            drop.executeUpdate();
             createPlaylist(con);
 
 
@@ -130,11 +128,14 @@ public class JDBCStrategy implements SerializableStrategy {
             e.printStackTrace();
         }
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (id) VALUES (?)")) {
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Playlist (id) VALUES (?)");
+             PreparedStatement drop = con.prepareStatement("DELETE FROM Playlist")) {
 
+            drop.executeUpdate();
 
             for(Song s : p){
                 pstmt.setInt(1,(int)s.getId());
+                pstmt.executeUpdate();
             }
 
         } catch (SQLException e) {
