@@ -32,7 +32,7 @@ public class Controller {
         view.getPlaylist().setItems(model.getPlaylist());
         view.getDropdown().setItems(strats);
         view.addController(this);
-        addSongsFromFolder(model);
+        addSongsFromFolder("src/main/resources/songs");
 
         strats.add(new BinaryStrategy());
         strats.add(new XMLStrategy());
@@ -209,10 +209,9 @@ public class Controller {
         next();
     }
 
-    private void addSongsFromFolder(Model model) {
+    public void addSongsFromFolder(String folder) {
         // initialize File object
-        File file = new File("src/main/resources/songs");
-
+        File file = new File(folder);
         // check if the specified pathname is directory first
         if (file.isDirectory()) {
             //list all files on directory

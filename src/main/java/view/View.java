@@ -10,9 +10,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public  class View extends BorderPane {
@@ -49,6 +52,7 @@ public  class View extends BorderPane {
 
     //Bottom
     private Button addAllButton = new Button("Add all");
+    private Button directoryButton = new Button("Add Songs from Folder");
 
     //Selected song variable
     private interfaces.Song selectedSong = null;
@@ -108,7 +112,7 @@ public  class View extends BorderPane {
 
         //Bottom
         addAllButton.setMinWidth(60);
-        HBox bottomPane = new HBox(addAllButton);
+        HBox bottomPane = new HBox(addAllButton,directoryButton);
         bottomPane.setPadding(paddingMeta);
 
         //BorderPane layout
@@ -148,7 +152,19 @@ public  class View extends BorderPane {
         });
 
         addAllButton.setOnAction(e-> contr.addAllToPlaylist());
+        directoryButton.setOnAction(e ->{
+            DirectoryChooser d = new DirectoryChooser();
+            d.setInitialDirectory(new File("src/main/resources/songs"));
+            try {
+                File f = d.showDialog(this.getScene().getWindow());
+                if(f != null){
+                    contr.addSongsFromFolder(f.getCanonicalPath());
+                }
 
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
         addToPlaylistButton.setOnAction(e ->{
             contr.addToPlaylist();
             listview.refresh();
