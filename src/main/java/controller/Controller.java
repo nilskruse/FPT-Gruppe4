@@ -36,6 +36,7 @@ public class Controller {
 
         strats.add(new BinaryStrategy());
         strats.add(new XMLStrategy());
+        strats.add(new JDBCStrategy());
     }
 
     private void add(Song s) {
