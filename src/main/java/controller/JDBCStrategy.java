@@ -114,7 +114,20 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
-        return null;
+        Playlist returnLib = new model.Playlist();
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,artist,path FROM Library");
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while(rs.next()){
+                returnLib.addSong(new model.Song(rs.getString("title"),"album",rs.getString("artist"),rs.getString("path"),(long)rs.getInt("id")));
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnLib;
     }
 
     @Override
@@ -151,6 +164,14 @@ public class JDBCStrategy implements SerializableStrategy {
     @Override
     public void load(Model model) {
 
+        try {
+            model.getLibrary().clearPlaylist();
+            model.getLibrary().addAll(readLibrary().getList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
