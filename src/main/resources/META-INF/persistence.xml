@@ -5,7 +5,7 @@
              version="2.0">
     <persistence-unit name="openjpa">
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <class>OpenJPA.Pizza</class>
+        <class>model.Song</class>
         <properties>
             <property name="openjpa.ConnectionURL" value="jdbc:sqlite:musicplayer.db"/>
             <property name="openjpa.ConnectionDriverName" value="org.sqlite.JDBC"/>
