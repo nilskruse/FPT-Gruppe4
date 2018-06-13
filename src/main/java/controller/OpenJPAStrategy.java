@@ -9,6 +9,7 @@ import org.apache.openjpa.persistence.OpenJPAPersistence;
 import javax.persistence.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -46,23 +47,63 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
     @Override
     public void writeLibrary(Playlist p) throws IOException {
+        //try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db")) {
 
+          //  createLibrary(con);
+
+
+        //} catch (SQLException e) {
+          //  e.printStackTrace();
+        //}
+        //try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+          //   PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,path) VALUES (?,?,?)");
+           //  PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
+              // PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, artist = ? WHERE path = ?")) {
+            EntityTransaction t = getEntityManager().getTransaction();
+            t.begin();
+            for(Song s : p)
+            {
+                getEntityManager().persist(s);
+
+            }
+             t.commit();
+        //} catch (SQLException e) {
+          //  e.printStackTrace();
+        //}
     }
 
     @Override
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
-        return null;
+
+        Playlist returnLib = new model.Playlist();
+        EntityTransaction t = getEntityManager().getTransaction();
+        t.begin();
+        for(Object o : getEntityManager().createQuery("SELECT id,title,album,path FROM Library")
+                .getResultList())
+        {
+
+            Song s = (model.Song) o;
+            returnLib.addSong(new model.Song(s.getTitle(),"album",s.getAlbum(),s.getPath(),s.getId()));
+
+        }
+        t.commit();
+
+        return returnLib;
+
     }
 
     @Override
     public void writePlaylist(Playlist p) throws IOException {
-
+     // wird hier nicht benötigt
     }
 
     @Override
     public Playlist readPlaylist() throws IOException, ClassNotFoundException {
+        // wird hier nicht benötigt
         return null;
     }
+
+
 
     @Override
     public void load(Model model) {
@@ -108,8 +149,9 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public static EntityManager getEntityManager ()
     {
         //je nachdem mit oder ohne Konfig
-        EntityManager e = getWithConfig().createEntityManager();
-        //EntityManager e = getWithoutConfig().createEntityManager();
+        //EntityManager e = getWithConfig().createEntityManager();
+
+        EntityManager e = getWithoutConfig().createEntityManager();
         return e;
        // return
     }
@@ -139,7 +181,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
                     buf.append(";");
                 buf.append(c.getName());
             }
-            // <class>Pizza</class>
+
             map.put("openjpa.MetaDataFactory", "jpa(Types=" + buf.toString()+ ")");
         }
 

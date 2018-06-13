@@ -84,7 +84,7 @@ public class JDBCStrategy implements SerializableStrategy {
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
              PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,path) VALUES (?,?,?)");
              PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
-             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, artist = ? WHERE path = ?")) {
+             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, album = ? WHERE path = ?")) {
 
             for(Song s : p){
                 query.setString(1,s.getPath());

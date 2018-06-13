@@ -106,9 +106,9 @@ public class Song implements interfaces.Song,Serializable,Externalizable
     public void setId(long id) {
         this.id = id;
     }
+
     @Id
     @Column(name="id")
-
     public long getId() {
         return id;
     }
