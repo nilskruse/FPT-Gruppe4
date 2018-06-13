@@ -124,6 +124,7 @@ public class Controller {
                 songPointer = 0;
                 view.getPlaylist().getSelectionModel().select(songPointer);
             }
+           // System.out.println();
             model.setPlayer(new MediaPlayer(new Media(new File(model.getPlaylist().get(songPointer).getPath()).toURI().toString())));
             model.getPlayer().play();
             toggleButton(true);
