@@ -5,9 +5,12 @@ import javafx.beans.property.SimpleStringProperty;
 import org.apache.openjpa.persistence.Persistent;
 import org.apache.openjpa.persistence.jdbc.Strategy;
 
+import javax.persistence.*;
 import java.io.*;
 import java.util.ArrayList;
 
+@Entity( )
+@Table( name = "library" )
 public class Song implements interfaces.Song,Serializable,Externalizable
 {
     private static final long serialVersionUID = 4256245623546L;
@@ -37,14 +40,14 @@ public class Song implements interfaces.Song,Serializable,Externalizable
     }
 
 
-    public void setAlbum(String album) {
-        this.album.set(album);
-    }
 
+    @Column(name="album")
     public String getAlbum(){
         return album.get();
     }
-
+    public void setAlbum(String album) {
+        this.album.set(album);
+    }
 
     public void setInterpret(String interpret) {
         this.interpret.set(interpret);
@@ -55,23 +58,23 @@ public class Song implements interfaces.Song,Serializable,Externalizable
     }
 
 
+
+    @Column(name="path")
+    public String getPath() {
+        return path.get();
+    }
     public void setPath(String path) {
         this.path.set(path);
     }
 
-    public String getPath() {
-        return path.get();
-    }
 
-
-    public void setTitle(String title) {
-        this.title.set(title);
-    }
-
+    @Column(name="title")
     public String getTitle() {
         return title.get();
     }
-
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
 
 
     public SimpleStringProperty albumProperty() {
@@ -103,6 +106,8 @@ public class Song implements interfaces.Song,Serializable,Externalizable
     public void setId(long id) {
         this.id = id;
     }
+    @Id
+    @Column(name="id")
 
     public long getId() {
         return id;

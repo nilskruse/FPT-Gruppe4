@@ -19,7 +19,7 @@ public class JDBCStrategy implements SerializableStrategy {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer PRIMARY KEY, " +
                 "title text, " +
-                "artist text, " +
+                "album text, " +
                 "path text);")) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -82,7 +82,7 @@ public class JDBCStrategy implements SerializableStrategy {
             e.printStackTrace();
         }
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,artist,path) VALUES (?,?,?)");
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,path) VALUES (?,?,?)");
              PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
              PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, artist = ? WHERE path = ?")) {
 
@@ -116,11 +116,11 @@ public class JDBCStrategy implements SerializableStrategy {
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
         Playlist returnLib = new model.Playlist();
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,artist,path FROM Library");
+             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,album,path FROM Library");
              ResultSet rs = pstmt.executeQuery()) {
 
             while(rs.next()){
-                returnLib.addSong(new model.Song(rs.getString("title"),"album",rs.getString("artist"),rs.getString("path"),(long)rs.getInt("id")));
+                returnLib.addSong(new model.Song(rs.getString("title"),"album",rs.getString("album"),rs.getString("path"),(long)rs.getInt("id")));
             }
 
 
