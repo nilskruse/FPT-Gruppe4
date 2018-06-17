@@ -14,12 +14,16 @@ import java.sql.*;
 import java.util.Calendar;
 
 public class JDBCStrategy implements SerializableStrategy {
-
+    Model model;
+    public JDBCStrategy(Model model){
+        this.model = model;
+    }
     private static void createLibrary(Connection con) {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer PRIMARY KEY, " +
                 "title text, " +
                 "album text, " +
+                "interpret text, " +
                 "path text);")) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -82,23 +86,25 @@ public class JDBCStrategy implements SerializableStrategy {
             e.printStackTrace();
         }
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,path) VALUES (?,?,?)");
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,interpret,path) VALUES (?,?,?,?)");
              PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
-             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, album = ? WHERE path = ?")) {
+             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, album = ?, interpret = ? WHERE path = ?")) {
 
             for(Song s : p){
                 query.setString(1,s.getPath());
                 ResultSet rs = query.executeQuery();
                 if(!rs.next()) {
                     pstmt.setString(1, s.getTitle());
-                    pstmt.setString(2, s.getInterpret());
-                    pstmt.setString(3, s.getPath());
+                    pstmt.setString(2, s.getAlbum());
+                    pstmt.setString(3, s.getInterpret());
+                    pstmt.setString(4, s.getPath());
                     pstmt.executeUpdate();
                     System.out.println("insert");
                 }else{
                     update.setString(1, s.getTitle());
-                    update.setString(2, s.getInterpret());
-                    update.setString(3, s.getPath());
+                    update.setString(2, s.getAlbum());
+                    update.setString(3, s.getInterpret());
+                    update.setString(4, s.getPath());
                     update.executeUpdate();
                     System.out.println("update");
 
@@ -116,11 +122,11 @@ public class JDBCStrategy implements SerializableStrategy {
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
         Playlist returnLib = new model.Playlist();
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,album,path FROM Library");
+             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,album,interpret,path FROM Library");
              ResultSet rs = pstmt.executeQuery()) {
 
             while(rs.next()){
-                returnLib.addSong(new model.Song(rs.getString("title"),"album",rs.getString("album"),rs.getString("path"),(long)rs.getInt("id")));
+                returnLib.addSong(new model.Song(rs.getString("title"),rs.getString("album"),rs.getString("interpret"),rs.getString("path"),(long)rs.getInt("id")));
             }
 
 
@@ -158,7 +164,21 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public Playlist readPlaylist() throws IOException, ClassNotFoundException {
-        return null;
+        Playlist lib = model.getLibrary();
+        Playlist returnPly = new model.Playlist();
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
+             PreparedStatement pstmt = con.prepareStatement("SELECT id FROM Playlist");
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while(rs.next()){
+                returnPly.addSong(lib.findSongByID((long)rs.getInt("id")));
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return returnPly;
     }
 
     @Override
@@ -167,6 +187,8 @@ public class JDBCStrategy implements SerializableStrategy {
         try {
             model.getLibrary().clearPlaylist();
             model.getLibrary().addAll(readLibrary().getList());
+            model.getPlaylist().clearPlaylist();
+            model.getPlaylist().addAll(readPlaylist().getList());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
