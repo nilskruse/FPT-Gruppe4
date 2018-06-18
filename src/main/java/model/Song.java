@@ -9,23 +9,37 @@ import javax.persistence.*;
 import java.io.*;
 import java.util.ArrayList;
 
-@Entity( )
-@Table( name = "library" )
+@Entity()
+@Table( name = "Library" )
 public class Song implements interfaces.Song,Serializable,Externalizable
 {
     private static final long serialVersionUID = 4256245623546L;
 
 
-    private transient SimpleStringProperty path = new SimpleStringProperty();
-
-    private transient SimpleStringProperty title = new SimpleStringProperty();
-
-    private transient SimpleStringProperty album = new SimpleStringProperty();
-
-    private transient SimpleStringProperty interpret = new SimpleStringProperty();
-
-
+    @Id
+    @Column(name="id")
     private long id;
+
+    @Persistent
+    @Strategy("helper.StringPropertyValueHandler")
+    @Column(name ="title")
+    private SimpleStringProperty title = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy("helper.StringPropertyValueHandler")
+    @Column(name ="album")
+    private SimpleStringProperty album = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy("helper.StringPropertyValueHandler")
+    @Column(name ="interpret")
+    private SimpleStringProperty interpret = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy("helper.StringPropertyValueHandler")
+    @Column(name ="path")
+    private SimpleStringProperty path = new SimpleStringProperty();
+
 
     public Song(){
 
@@ -41,7 +55,7 @@ public class Song implements interfaces.Song,Serializable,Externalizable
 
 
 
-    @Column(name="album")
+
     public String getAlbum(){
         return album.get();
     }
@@ -59,7 +73,6 @@ public class Song implements interfaces.Song,Serializable,Externalizable
 
 
 
-    @Column(name="path")
     public String getPath() {
         return path.get();
     }
@@ -68,7 +81,6 @@ public class Song implements interfaces.Song,Serializable,Externalizable
     }
 
 
-    @Column(name="title")
     public String getTitle() {
         return title.get();
     }
@@ -107,8 +119,7 @@ public class Song implements interfaces.Song,Serializable,Externalizable
         this.id = id;
     }
 
-    @Id
-    @Column(name="id")
+
     public long getId() {
         return id;
     }

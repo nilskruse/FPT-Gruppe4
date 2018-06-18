@@ -267,6 +267,7 @@ public class Controller {
             ser.load(model);
             System.out.println("load");
         }catch (Exception e){
+            e.printStackTrace();
             SelectedStrategyError();
         }
 

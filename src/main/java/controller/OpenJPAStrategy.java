@@ -9,11 +9,15 @@ import org.apache.openjpa.persistence.OpenJPAPersistence;
 import javax.persistence.*;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
 
 public class OpenJPAStrategy implements SerializableStrategy {
+    Model model;
 
     @Override
     public void openWritableLibrary() throws IOException {
@@ -45,71 +49,133 @@ public class OpenJPAStrategy implements SerializableStrategy {
         return null;
     }
 
+    private static void createLibrary(Connection con) {
+        try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
+                "id integer, " +
+                "title text, " +
+                "album text, " +
+                "interpret text, " +
+                "path text);");) {
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
+                "id integer, " +
+                "title text, " +
+                "album text, " +
+                "interpret text, " +
+                "path text);");PreparedStatement drop = con.prepareStatement("DELETE FROM Library")) {
+            drop.executeUpdate();
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void writeLibrary(Playlist p) throws IOException {
-        //try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db")) {
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:openjpa.db")) {
+            createLibrary(con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-          //  createLibrary(con);
+        EntityManagerFactory fac = getWithoutConfig();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+        t.begin();
+        for(Song s : p){
+            e.persist(s);
+        }
+        t.commit();
 
-
-        //} catch (SQLException e) {
-          //  e.printStackTrace();
-        //}
-        //try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-          //   PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,path) VALUES (?,?,?)");
-           //  PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
-              // PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, artist = ? WHERE path = ?")) {
-            EntityTransaction t = getEntityManager().getTransaction();
-            t.begin();
-            for(Song s : p)
-            {
-                getEntityManager().persist(s);
-
-            }
-             t.commit();
-        //} catch (SQLException e) {
-          //  e.printStackTrace();
-        //}
+        e.close();
+        fac.close();
     }
 
     @Override
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
-
         Playlist returnLib = new model.Playlist();
-        EntityTransaction t = getEntityManager().getTransaction();
+        EntityManagerFactory fac = getWithoutConfig();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+
         t.begin();
-        for(Object o : getEntityManager().createQuery("SELECT id,title,album,path FROM Library")
-                .getResultList())
-        {
 
+        for(Object o : e.createQuery("SELECT x FROM Song x").getResultList()){
             Song s = (model.Song) o;
-            returnLib.addSong(new model.Song(s.getTitle(),"album",s.getAlbum(),s.getPath(),s.getId()));
-
+            returnLib.addSong(s);
         }
+        System.out.println(returnLib);
+
         t.commit();
 
+        e.close();
+        fac.close();
         return returnLib;
 
     }
 
     @Override
     public void writePlaylist(Playlist p) throws IOException {
-     // wird hier nicht benötigt
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:openjpapl.db")) {
+            createLibrary(con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        EntityManagerFactory fac = getWithoutConfigPl();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+        t.begin();
+        System.out.println(p);
+        int i = 0;
+        for(Song s : p){
+            e.persist(new model.Song(s.getTitle(),s.getAlbum(),s.getInterpret(),s.getPath(),s.getId()));
+            System.out.println(++i);
+        }
+        t.commit();
+
+        e.close();
+        fac.close();
     }
 
     @Override
     public Playlist readPlaylist() throws IOException, ClassNotFoundException {
-        // wird hier nicht benötigt
-        return null;
+        Playlist lib = new model.Playlist();
+        Playlist returnPl = new model.Playlist();
+        EntityManagerFactory fac = getWithoutConfigPl();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+
+        t.begin();
+
+        for(Object o : e.createQuery("SELECT x FROM Song x").getResultList()){
+            Song s = (model.Song) o;
+            lib.addSong(s);
+        }
+
+        t.commit();
+
+        e.close();
+        fac.close();
+        for(Song s : lib){
+            returnPl.addSong(model.getLibrary().findSongByID(s.getId()));
+        }
+        return returnPl;
     }
 
 
 
     @Override
     public void load(Model model) {
+        this.model = model;
         try {
             model.getLibrary().clearPlaylist();
             model.getLibrary().addAll(readLibrary().getList());
+            model.getPlaylist().clearPlaylist();
+            model.getPlaylist().addAll(readPlaylist().getList());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -119,6 +185,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
     @Override
     public void save(Model model) {
+
         try {
             writeLibrary(model.getLibrary());
             writePlaylist(model.getPlaylist());
@@ -146,26 +213,12 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public void closeReadablePlaylist() {
 
     }
-    public static EntityManager getEntityManager ()
-    {
-        //je nachdem mit oder ohne Konfig
-        //EntityManager e = getWithConfig().createEntityManager();
 
-        EntityManager e = getWithoutConfig().createEntityManager();
-        return e;
-       // return
-    }
-    private  static EntityManagerFactory getWithConfig()
-    {
-        return Persistence.createEntityManagerFactory("openjpa");
-    }
-    // Class zum einlesen ohne Konfig datei
-    private static EntityManagerFactory getWithoutConfig()
-    {
+    public static EntityManagerFactory getWithoutConfig() {
 
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put("openjpa.ConnectionURL","jdbc:sqlite:libary.db");
+        map.put("openjpa.ConnectionURL","jdbc:sqlite:openjpa.db");
         map.put("openjpa.ConnectionDriverName", "org.sqlite.JDBC");
         map.put("openjpa.RuntimeUnenhancedClasses", "supported");
         map.put("openjpa.jdbc.SynchronizeMappings", "false");
@@ -181,7 +234,34 @@ public class OpenJPAStrategy implements SerializableStrategy {
                     buf.append(";");
                 buf.append(c.getName());
             }
+            // <class>Pizza</class>
+            map.put("openjpa.MetaDataFactory", "jpa(Types=" + buf.toString()+ ")");
+        }
 
+        return OpenJPAPersistence.getEntityManagerFactory(map);
+
+    }
+    public static EntityManagerFactory getWithoutConfigPl() {
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        map.put("openjpa.ConnectionURL","jdbc:sqlite:openjpapl.db");
+        map.put("openjpa.ConnectionDriverName", "org.sqlite.JDBC");
+        map.put("openjpa.RuntimeUnenhancedClasses", "supported");
+        map.put("openjpa.jdbc.SynchronizeMappings", "false");
+
+        // find all classes to registrate them
+        List<Class<?>> types = new ArrayList<Class<?>>();
+        types.add(model.Song.class);
+
+        if (!types.isEmpty()) {
+            StringBuffer buf = new StringBuffer();
+            for (Class<?> c : types) {
+                if (buf.length() > 0)
+                    buf.append(";");
+                buf.append(c.getName());
+            }
+            // <class>Pizza</class>
             map.put("openjpa.MetaDataFactory", "jpa(Types=" + buf.toString()+ ")");
         }
 
