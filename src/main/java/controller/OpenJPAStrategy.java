@@ -78,12 +78,12 @@ public class OpenJPAStrategy implements SerializableStrategy {
         Playlist returnLib = new model.Playlist();
         EntityTransaction t = getEntityManager().getTransaction();
         t.begin();
-        for(Object o : getEntityManager().createQuery("SELECT id,title,album,path FROM Library")
+        for(Object o : getEntityManager().createQuery("SELECT id,title,interpret,album,path FROM Library")
                 .getResultList())
         {
 
             Song s = (model.Song) o;
-            returnLib.addSong(new model.Song(s.getTitle(),"album",s.getAlbum(),s.getPath(),s.getId()));
+            returnLib.addSong(new model.Song(s.getTitle(),s.getInterpret(),s.getAlbum(),s.getPath(),s.getId()));
 
         }
         t.commit();
@@ -149,9 +149,9 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public static EntityManager getEntityManager ()
     {
         //je nachdem mit oder ohne Konfig
-        //EntityManager e = getWithConfig().createEntityManager();
+        EntityManager e = getWithConfig().createEntityManager();
 
-        EntityManager e = getWithoutConfig().createEntityManager();
+        //EntityManager e = getWithoutConfig().createEntityManager();
         return e;
        // return
     }
@@ -159,13 +159,14 @@ public class OpenJPAStrategy implements SerializableStrategy {
     {
         return Persistence.createEntityManagerFactory("openjpa");
     }
+
     // Class zum einlesen ohne Konfig datei
     private static EntityManagerFactory getWithoutConfig()
     {
 
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put("openjpa.ConnectionURL","jdbc:sqlite:libary.db");
+        map.put("openjpa.ConnectionURL","jdbc:sqlite:musicplayer.db");
         map.put("openjpa.ConnectionDriverName", "org.sqlite.JDBC");
         map.put("openjpa.RuntimeUnenhancedClasses", "supported");
         map.put("openjpa.jdbc.SynchronizeMappings", "false");

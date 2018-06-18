@@ -22,8 +22,8 @@ public class JDBCStrategy implements SerializableStrategy {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer PRIMARY KEY, " +
                 "title text, " +
-                "album text, " +
                 "interpret text, " +
+                "album text, " +
                 "path text);")) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -86,24 +86,24 @@ public class JDBCStrategy implements SerializableStrategy {
             e.printStackTrace();
         }
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,album,interpret,path) VALUES (?,?,?,?)");
+             PreparedStatement pstmt = con.prepareStatement("INSERT INTO Library (title,interpret,album,path) VALUES (?,?,?,?)");
              PreparedStatement query = con.prepareStatement("SELECT * FROM Library WHERE path=?");
-             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, album = ?, interpret = ? WHERE path = ?")) {
+             PreparedStatement update = con.prepareStatement("UPDATE Library SET title = ?, interpret = ?, album = ? WHERE path = ?")) {
 
             for(Song s : p){
                 query.setString(1,s.getPath());
                 ResultSet rs = query.executeQuery();
                 if(!rs.next()) {
                     pstmt.setString(1, s.getTitle());
-                    pstmt.setString(2, s.getAlbum());
-                    pstmt.setString(3, s.getInterpret());
+                    pstmt.setString(2, s.getInterpret());
+                    pstmt.setString(3, s.getAlbum());
                     pstmt.setString(4, s.getPath());
                     pstmt.executeUpdate();
                     System.out.println("insert");
                 }else{
                     update.setString(1, s.getTitle());
-                    update.setString(2, s.getAlbum());
-                    update.setString(3, s.getInterpret());
+                    update.setString(2, s.getInterpret());
+                    update.setString(3, s.getAlbum());
                     update.setString(4, s.getPath());
                     update.executeUpdate();
                     System.out.println("update");
@@ -122,11 +122,11 @@ public class JDBCStrategy implements SerializableStrategy {
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
         Playlist returnLib = new model.Playlist();
         try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db");
-             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,album,interpret,path FROM Library");
+             PreparedStatement pstmt = con.prepareStatement("SELECT id,title,interpret,album,path FROM Library");
              ResultSet rs = pstmt.executeQuery()) {
 
             while(rs.next()){
-                returnLib.addSong(new model.Song(rs.getString("title"),rs.getString("album"),rs.getString("interpret"),rs.getString("path"),(long)rs.getInt("id")));
+                returnLib.addSong(new model.Song(rs.getString("title"),rs.getString("interpret"),rs.getString("album"),rs.getString("path"),(long)rs.getInt("id")));
             }
 
 

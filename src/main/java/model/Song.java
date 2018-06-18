@@ -15,66 +15,25 @@ public class Song implements interfaces.Song,Serializable,Externalizable
 {
     private static final long serialVersionUID = 4256245623546L;
 
-
-    private transient SimpleStringProperty path = new SimpleStringProperty();
-
-    private transient SimpleStringProperty title = new SimpleStringProperty();
-
-    private transient SimpleStringProperty album = new SimpleStringProperty();
-
-    private transient SimpleStringProperty interpret = new SimpleStringProperty();
-
-
-    private long id;
-
-    public Song(){
-
-    }
-
-    public Song(String title,String album, String interpret, String path, long id){
-        this.setTitle(title);
-        this.setAlbum(album);
-        this.setInterpret(interpret);
-        this.setPath(path);
-        this.id = id;
-    }
-
-
-
-    @Column(name="album")
-    public String getAlbum(){
-        return album.get();
-    }
-    public void setAlbum(String album) {
-        this.album.set(album);
-    }
-
-    public void setInterpret(String interpret) {
-        this.interpret.set(interpret);
-    }
-
-    public String getInterpret() {
-        return interpret.get();
-    }
-
-
-
+    @Persistent
+    @Strategy(value = "helper.StringPropertyValueHandler")
     @Column(name="path")
-    public String getPath() {
-        return path.get();
-    }
-    public void setPath(String path) {
-        this.path.set(path);
-    }
+    private SimpleStringProperty path = new SimpleStringProperty();
 
-
+    @Persistent
+    @Strategy(value = "helper.StringPropertyValueHandler")
     @Column(name="title")
-    public String getTitle() {
-        return title.get();
-    }
-    public void setTitle(String title) {
-        this.title.set(title);
-    }
+    private SimpleStringProperty title = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy(value = "helper.StringPropertyValueHandler")
+    @Column(name="interpret")
+    private SimpleStringProperty interpret = new SimpleStringProperty();
+
+    @Persistent
+    @Strategy(value = "helper.StringPropertyValueHandler")
+    @Column(name="album")
+    private SimpleStringProperty album = new SimpleStringProperty();
 
 
     public SimpleStringProperty albumProperty() {
@@ -93,6 +52,51 @@ public class Song implements interfaces.Song,Serializable,Externalizable
         return title;
     }
 
+    @Id
+    @Column(name="id")
+    private long id;
+
+    public Song(){
+
+    }
+
+    public Song(String title,String album, String interpret, String path, long id){
+        this.setTitle(title);
+        this.setAlbum(album);
+        this.setInterpret(interpret);
+        this.setPath(path);
+        this.id = id;
+    }
+
+    public String getAlbum(){
+        return album.get();
+    }
+    public void setAlbum(String album) {
+        this.album.set(album);
+    }
+
+    public String getInterpret() {
+        return interpret.get();
+    }
+    public void setInterpret(String interpret) {
+        this.interpret.set(interpret);
+    }
+
+    public String getPath() {
+        return path.get();
+    }
+    public void setPath(String path) {
+        this.path.set(path);
+    }
+
+    public String getTitle() {
+        return title.get();
+    }
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
+
+
     public String toString(){
         if(id < 10){
             return "0" + id + " " + getTitle() + " " + getAlbum() + " " + getInterpret();
@@ -107,8 +111,6 @@ public class Song implements interfaces.Song,Serializable,Externalizable
         this.id = id;
     }
 
-    @Id
-    @Column(name="id")
     public long getId() {
         return id;
     }
