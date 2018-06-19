@@ -15,9 +15,6 @@ import java.util.Calendar;
 
 public class JDBCStrategy implements SerializableStrategy {
     Model model;
-    public JDBCStrategy(Model model){
-        this.model = model;
-    }
     private static void createLibrary(Connection con) {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer PRIMARY KEY, " +
@@ -126,7 +123,7 @@ public class JDBCStrategy implements SerializableStrategy {
              ResultSet rs = pstmt.executeQuery()) {
 
             while(rs.next()){
-                returnLib.addSong(new model.Song(rs.getString("title"),rs.getString("interpret"),rs.getString("album"),rs.getString("path"),(long)rs.getInt("id")));
+                returnLib.addSong(new model.Song(rs.getString("title"),rs.getString("album"),rs.getString("interpret"),rs.getString("path"),(long)rs.getInt("id")));
             }
 
 
@@ -183,7 +180,7 @@ public class JDBCStrategy implements SerializableStrategy {
 
     @Override
     public void load(Model model) {
-
+        this.model = model;
         try {
             model.getLibrary().clearPlaylist();
             model.getLibrary().addAll(readLibrary().getList());

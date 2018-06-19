@@ -36,7 +36,7 @@ public class Controller {
 
         strats.add(new BinaryStrategy());
         strats.add(new XMLStrategy());
-        strats.add(new JDBCStrategy(model));
+        strats.add(new JDBCStrategy());
         strats.add(new OpenJPAStrategy());
     }
 

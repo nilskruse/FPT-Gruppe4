@@ -50,6 +50,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
     }
 
     private static void createLibrary(Connection con) {
+
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer, " +
                 "title text, " +
@@ -75,7 +76,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
     @Override
     public void writeLibrary(Playlist p) throws IOException {
-        try (Connection con = DriverManager.getConnection("jdbc:sqlite:openjpa.db")) {
+        try (Connection con = DriverManager.getConnection("jdbc:sqlite:musicplayer.db")) {
             createLibrary(con);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,51 +120,13 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
     @Override
     public void writePlaylist(Playlist p) throws IOException {
-        try (Connection con = DriverManager.getConnection("jdbc:sqlite:openjpapl.db")) {
-            createLibrary(con);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        EntityManagerFactory fac = getWithoutConfigPl();
-        EntityManager e = fac.createEntityManager();
-        EntityTransaction t = e.getTransaction();
-        t.begin();
-        System.out.println(p);
-        int i = 0;
-        for(Song s : p){
-            e.persist(new model.Song(s.getTitle(),s.getAlbum(),s.getInterpret(),s.getPath(),s.getId()));
-            System.out.println(++i);
-        }
-        t.commit();
-
-        e.close();
-        fac.close();
     }
 
     @Override
     public Playlist readPlaylist() throws IOException, ClassNotFoundException {
-        Playlist lib = new model.Playlist();
-        Playlist returnPl = new model.Playlist();
-        EntityManagerFactory fac = getWithoutConfigPl();
-        EntityManager e = fac.createEntityManager();
-        EntityTransaction t = e.getTransaction();
 
-        t.begin();
-
-        for(Object o : e.createQuery("SELECT x FROM Song x").getResultList()){
-            Song s = (model.Song) o;
-            lib.addSong(s);
-        }
-
-        t.commit();
-
-        e.close();
-        fac.close();
-        for(Song s : lib){
-            returnPl.addSong(model.getLibrary().findSongByID(s.getId()));
-        }
-        return returnPl;
+        return null;
     }
 
 
@@ -174,8 +137,6 @@ public class OpenJPAStrategy implements SerializableStrategy {
         try {
             model.getLibrary().clearPlaylist();
             model.getLibrary().addAll(readLibrary().getList());
-            model.getPlaylist().clearPlaylist();
-            model.getPlaylist().addAll(readPlaylist().getList());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -218,34 +179,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put("openjpa.ConnectionURL","jdbc:sqlite:openjpa.db");
-        map.put("openjpa.ConnectionDriverName", "org.sqlite.JDBC");
-        map.put("openjpa.RuntimeUnenhancedClasses", "supported");
-        map.put("openjpa.jdbc.SynchronizeMappings", "false");
-
-        // find all classes to registrate them
-        List<Class<?>> types = new ArrayList<Class<?>>();
-        types.add(model.Song.class);
-
-        if (!types.isEmpty()) {
-            StringBuffer buf = new StringBuffer();
-            for (Class<?> c : types) {
-                if (buf.length() > 0)
-                    buf.append(";");
-                buf.append(c.getName());
-            }
-            // <class>Pizza</class>
-            map.put("openjpa.MetaDataFactory", "jpa(Types=" + buf.toString()+ ")");
-        }
-
-        return OpenJPAPersistence.getEntityManagerFactory(map);
-
-    }
-    public static EntityManagerFactory getWithoutConfigPl() {
-
-        Map<String, String> map = new HashMap<String, String>();
-
-        map.put("openjpa.ConnectionURL","jdbc:sqlite:openjpapl.db");
+        map.put("openjpa.ConnectionURL","jdbc:sqlite:musicplayer.db");
         map.put("openjpa.ConnectionDriverName", "org.sqlite.JDBC");
         map.put("openjpa.RuntimeUnenhancedClasses", "supported");
         map.put("openjpa.jdbc.SynchronizeMappings", "false");
