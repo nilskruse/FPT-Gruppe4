@@ -82,7 +82,8 @@ public class OpenJPAStrategy implements SerializableStrategy {
             e.printStackTrace();
         }
 
-        EntityManagerFactory fac = getWithoutConfig();
+        //EntityManagerFactory fac = getWithoutConfig();
+        EntityManagerFactory fac = getWithConfig();
         EntityManager e = fac.createEntityManager();
         EntityTransaction t = e.getTransaction();
         t.begin();
@@ -98,7 +99,8 @@ public class OpenJPAStrategy implements SerializableStrategy {
     @Override
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
         Playlist returnLib = new model.Playlist();
-        EntityManagerFactory fac = getWithoutConfig();
+        //EntityManagerFactory fac = getWithoutConfig();
+        EntityManagerFactory fac = getWithConfig();
         EntityManager e = fac.createEntityManager();
         EntityTransaction t = e.getTransaction();
 
@@ -149,7 +151,6 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
         try {
             writeLibrary(model.getLibrary());
-            writePlaylist(model.getPlaylist());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,6 +175,10 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public void closeReadablePlaylist() {
 
     }
+
+    private  static EntityManagerFactory getWithConfig() {
+        return Persistence.createEntityManagerFactory("openjpa");
+         }
 
     public static EntityManagerFactory getWithoutConfig() {
 

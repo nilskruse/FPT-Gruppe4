@@ -7,7 +7,7 @@
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
         <class>model.Song</class>
         <properties>
-            <property name="openjpa.ConnectionURL" value="jdbc:sqlite:musicplayerJPA.db"/>
+            <property name="openjpa.ConnectionURL" value="jdbc:sqlite:musicplayer.db"/>
             <property name="openjpa.ConnectionDriverName" value="org.sqlite.JDBC"/>
             <property name="openjpa.RuntimeUnenhancedClasses" value="supported"/>
             <property name="openjpa.jdbc.SynchronizeMappings" value="false"/>
