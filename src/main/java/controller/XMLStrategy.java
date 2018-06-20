@@ -10,6 +10,9 @@ import java.beans.XMLEncoder;
 import java.io.*;
 
 public class XMLStrategy implements SerializableStrategy {
+    public String toString(){
+        return "XML";
+    }
 
     private FileOutputStream libraryFO;
     private XMLEncoder libraryEncoder;

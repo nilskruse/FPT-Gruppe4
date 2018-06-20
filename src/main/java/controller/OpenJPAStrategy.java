@@ -19,6 +19,10 @@ import java.util.*;
 public class OpenJPAStrategy implements SerializableStrategy {
     Model model;
 
+    public String toString(){
+        return "OpenJPA";
+    }
+
     @Override
     public void openWritableLibrary() throws IOException {
 

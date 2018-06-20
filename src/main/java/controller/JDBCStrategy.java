@@ -15,6 +15,11 @@ import java.util.Calendar;
 
 public class JDBCStrategy implements SerializableStrategy {
     Model model;
+
+    public String toString(){
+        return "JDBC";
+    }
+
     private static void createLibrary(Connection con) {
         try (PreparedStatement pstmt = con.prepareStatement("CREATE TABLE IF NOT EXISTS Library (" +
                 "id integer PRIMARY KEY, " +

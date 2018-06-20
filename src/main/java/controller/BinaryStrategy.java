@@ -8,7 +8,9 @@ import model.Model;
 import java.io.*;
 
 public class BinaryStrategy implements SerializableStrategy {
-    private String name = "Binary";
+    public String toString(){
+        return "Binary";
+    }
 
     FileOutputStream libraryFO;
     ObjectOutputStream libraryOS;
