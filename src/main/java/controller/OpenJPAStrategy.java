@@ -5,6 +5,7 @@ import interfaces.SerializableStrategy;
 import interfaces.Song;
 import model.Model;
 import org.apache.openjpa.persistence.OpenJPAPersistence;
+import view.ShowError;
 
 import javax.persistence.*;
 
@@ -105,7 +106,7 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
         File f = new File("musicplayer.db");
         if(!f.exists()) {
-            System.out.println("keine datenbank vorhanden");
+            DatenbankEmptyError();
             return null;
         }
         Playlist returnLib = new model.Playlist();
@@ -129,7 +130,9 @@ public class OpenJPAStrategy implements SerializableStrategy {
         return returnLib;
 
     }
-
+    private void DatenbankEmptyError(){
+        ShowError.infoBox("Datenbank muss vorher gefüllt werden.", "Datenbank ist leer.");
+    }
     @Override
     public void writePlaylist(Playlist p) throws IOException {
 
