@@ -8,6 +8,7 @@ import org.apache.openjpa.persistence.OpenJPAPersistence;
 
 import javax.persistence.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -102,6 +103,11 @@ public class OpenJPAStrategy implements SerializableStrategy {
 
     @Override
     public Playlist readLibrary() throws IOException, ClassNotFoundException {
+        File f = new File("musicplayer.db");
+        if(!f.exists()) {
+            System.out.println("keine datenbank vorhanden");
+            return null;
+        }
         Playlist returnLib = new model.Playlist();
         //EntityManagerFactory fac = getWithoutConfig();
         EntityManagerFactory fac = getWithConfig();
@@ -141,8 +147,12 @@ public class OpenJPAStrategy implements SerializableStrategy {
     public void load(Model model) {
         this.model = model;
         try {
-            model.getLibrary().clearPlaylist();
-            model.getLibrary().addAll(readLibrary().getList());
+            Playlist p = readLibrary();
+            if(p != null){
+                model.getLibrary().clearPlaylist();
+                model.getLibrary().addAll(p.getList());
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
