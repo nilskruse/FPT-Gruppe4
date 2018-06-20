@@ -6,12 +6,8 @@ import interfaces.Song;
 import model.Model;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.*;
-import java.util.Calendar;
+
 
 public class JDBCStrategy implements SerializableStrategy {
     Model model;
