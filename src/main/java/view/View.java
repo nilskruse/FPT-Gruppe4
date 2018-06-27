@@ -48,7 +48,7 @@ public  class View extends BorderPane {
     private Button saveButton = new Button("Save");
 
     // Playtime
-    private Text playTime = new Text("0:00 / 0:00");
+    private Text playTime = new Text("00:00 / 00:00");
 
     //Bottom
     private Button addAllButton = new Button("Add all");

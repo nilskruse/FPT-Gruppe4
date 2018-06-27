@@ -140,19 +140,31 @@ public class Controller {
                 Duration d = (Duration) newVal;
                 Duration tD = model.getPlayer().getTotalDuration();
                 String r,s;
+                String rNullsek ="";
+                String sNullsek = "";
+                String rNullmin ="";
+                String sNullmin = "";
+
                 if(((int)d.toSeconds() % 60) < 10){
-                    r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
-                }else{
-                    r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
+                    rNullsek = "0";
+                       // r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
                 }
-
+                if(((int)d.toMinutes() % 60) < 10){
+                    rNullmin = "0";
+                    // r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
+                }
                 if(((int) tD.toSeconds() % 60) < 10){
-                    s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
-                }else{
-                    s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
+                    sNullsek = "0";
+                    // s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
+                }
+                if(((int) tD.toMinutes() % 60) < 10){
+                    sNullmin = "0";
+                    // s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
                 }
 
-                view.getPlayTime().setText(r + " / " + s);
+                    s = sNullmin +(int)tD.toMinutes() + ":"+ sNullsek + (int)(tD.toSeconds() % 60);
+                    r = rNullmin +(int)d.toMinutes() + ":" +rNullsek + (int)(d.toSeconds() % 60);
+                    view.getPlayTime().setText(r + " / " + s);
 
             });
         } catch (NullPointerException | IndexOutOfBoundsException e) {
