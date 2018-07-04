@@ -5,8 +5,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class Model{
+public class Model implements Serializable {
     private Playlist library = new Playlist();
     private Playlist playlist = new Playlist();
     private MediaPlayer player ;

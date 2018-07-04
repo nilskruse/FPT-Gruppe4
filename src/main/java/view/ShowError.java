@@ -6,10 +6,6 @@ import javafx.application.Platform;
 
 public class ShowError extends View{
 
-    public ShowError(Controller contr) {
-        super(contr);
-    }
-
     public static void infoBox(String infoMessage, String titleBar)
     {
         // Header Message Null bezweckt das wir keinen Header haben.

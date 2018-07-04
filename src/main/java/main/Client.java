@@ -19,9 +19,9 @@ public class Client extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        controller.Controller remote = (controller.Controller) Naming.lookup("//localhost/musicplayer");
+        interfaces.Controller remote = (interfaces.Controller) Naming.lookup("//localhost:1099/musicplayer");
         Model model = new Model();
-        View view = new View(remote);
+        View view = new View();
         remote.link(model, view);
         Scene scene  = new Scene(view, 700, 500);
         primaryStage.setTitle("MUSICPLAYER");

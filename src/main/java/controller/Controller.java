@@ -14,11 +14,14 @@ import view.View;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 
-public class Controller extends UnicastRemoteObject implements interfaces.Controller {
+public class Controller extends UnicastRemoteObject implements Serializable,interfaces.Controller {
+
+    private static final long serialVersionUID = 1L;
 
     private Model model;
     private View view;

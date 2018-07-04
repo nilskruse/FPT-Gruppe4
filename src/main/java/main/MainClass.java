@@ -21,8 +21,8 @@ public class MainClass extends Application{
 
         // hier die Daten verwalten
         Model model = new Model();
+        View view = new View();
         Controller controller = new Controller();
-        View view = new View(controller);
         controller.link(model, view);
 
 

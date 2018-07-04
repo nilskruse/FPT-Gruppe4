@@ -12,17 +12,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.rmi.RemoteException;
 
 
-public  class View extends BorderPane {
+public  class View extends BorderPane implements Serializable {
 
     private Controller contr;
-    private static ListView<Song> listview = new ListView<>();
+    private ListView<Song> listview = new ListView<>();
     private ListView<Song> libraryview = new ListView<>();
 
 
@@ -66,8 +63,7 @@ public  class View extends BorderPane {
 
     }
 
-    public View(Controller contr){
-        this.contr = contr;
+    public View(){
 
         //Right
         //Define Icons for Buttons
