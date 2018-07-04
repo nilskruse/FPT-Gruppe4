@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 
 public  class View extends BorderPane {
@@ -65,7 +66,8 @@ public  class View extends BorderPane {
 
     }
 
-    public View(){
+    public View(Controller contr){
+        this.contr = contr;
 
         //Right
         //Define Icons for Buttons
@@ -134,7 +136,11 @@ public  class View extends BorderPane {
 
         listview.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2){
-                contr.play();
+                try {
+                    contr.play();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
             if(!listview.getProperties().isEmpty()){
                 titleInput.setText(listview.getSelectionModel().getSelectedItem().getTitle());
@@ -146,12 +152,22 @@ public  class View extends BorderPane {
         });
 
         commitButton.setOnAction(e ->{
-            contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
+            try {
+                contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
             listview.refresh();
             libraryview.refresh();
         });
 
-        addAllButton.setOnAction(e-> contr.addAllToPlaylist());
+        addAllButton.setOnAction(e-> {
+            try {
+                contr.addAllToPlaylist();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+        });
         directoryButton.setOnAction(e ->{
             DirectoryChooser d = new DirectoryChooser();
             d.setInitialDirectory(new File("src/main/resources/songs"));
@@ -166,25 +182,45 @@ public  class View extends BorderPane {
             }
         });
         addToPlaylistButton.setOnAction(e ->{
-            contr.addToPlaylist();
+            try {
+                contr.addToPlaylist();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
             listview.refresh();
         } );
 
         deleteButton.setOnAction(e ->{
-            contr.deleteSongFromPlaylist();
+            try {
+                contr.deleteSongFromPlaylist();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
             listview.refresh();
         });
 
         playButton.setOnAction(e -> {
-            contr.play();
+            try {
+                contr.play();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         });
 
         pauseButton.setOnAction(e -> {
-            contr.pause();
+            try {
+                contr.pause();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         });
 
         nextButton.setOnAction( e -> {
-            contr.next();
+            try {
+                contr.next();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         });
 
         //Cell Factory
@@ -224,9 +260,27 @@ public  class View extends BorderPane {
 
         });
 
-        dropdown.setOnAction(e -> contr.selectStrategy());
-        loadButton.setOnAction(e -> contr.load());
-        saveButton.setOnAction(e -> contr.save());
+        dropdown.setOnAction(e -> {
+            try {
+                contr.selectStrategy();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+        });
+        loadButton.setOnAction(e -> {
+            try {
+                contr.load();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+        });
+        saveButton.setOnAction(e -> {
+            try {
+                contr.save();
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     public ListView<Song> getList() {

@@ -1,38 +1,32 @@
 package main;
 
-
+import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
 import view.View;
-import controller.Controller;
 
-public class MainClass extends Application{
-    public static void main(String[] args) {
+import java.rmi.Naming;
+
+public class Client extends Application {
+    public static void main(String[] args) throws Exception{
         Application.launch(args);
-    }
 
+
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        
-
-        // hier die Daten verwalten
+        controller.Controller remote = (controller.Controller) Naming.lookup("//localhost/musicplayer");
         Model model = new Model();
-        Controller controller = new Controller();
-        View view = new View(controller);
-        controller.link(model, view);
-
-
-
-        // JavaFX new
+        View view = new View(remote);
+        remote.link(model, view);
         Scene scene  = new Scene(view, 700, 500);
         primaryStage.setTitle("MUSICPLAYER");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
-
-
 }

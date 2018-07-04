@@ -1,9 +1,14 @@
 package view;
+import controller.Controller;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.application.Platform;
 
-public class ShowError extends  View{
+public class ShowError extends View{
+
+    public ShowError(Controller contr) {
+        super(contr);
+    }
 
     public static void infoBox(String infoMessage, String titleBar)
     {

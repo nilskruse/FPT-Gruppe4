@@ -14,16 +14,21 @@ import view.View;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 
-
-public class Controller {
+public class Controller extends UnicastRemoteObject implements interfaces.Controller {
 
     private Model model;
     private View view;
     private int songPointer;
     private Serialization ser = new Serialization();
     private ObservableList<SerializableStrategy> strats = FXCollections.observableArrayList();
+
+    public Controller() throws RemoteException {
+        super();
+    }
 
     public void link(Model model, View view) {
         this.model = model;
@@ -40,7 +45,7 @@ public class Controller {
         strats.add(new OpenJPAStrategy());
     }
 
-    private void add(Song s) {
+    public void add(Song s) throws RemoteException {
 
         try {
             s.setId(IDGenerator.getNextID());
@@ -50,7 +55,7 @@ public class Controller {
         }
     }
 
-    public void addToPlaylist() {
+    public void addToPlaylist() throws RemoteException {
         Song selectedSongInLibrary = view.getList().getSelectionModel().getSelectedItem();
         if (selectedSongInLibrary != null) {
             model.getPlaylist().addSong(selectedSongInLibrary);
@@ -59,7 +64,7 @@ public class Controller {
         }
     }
 
-    public void addAllToPlaylist() {
+    public void addAllToPlaylist() throws RemoteException{
         if (!model.getLibrary().isEmpty()) {
             for (Song s : model.getLibrary())
             {
@@ -72,7 +77,7 @@ public class Controller {
 
     }
 
-    public void changeSongProperties(Song s, String title, String album, String interpret) {
+    public void changeSongProperties(Song s, String title, String album, String interpret) throws RemoteException {
         try {
             if ( s != null )
             {
@@ -89,7 +94,7 @@ public class Controller {
         }
     }
 
-    public void deleteSongFromPlaylist() {
+    public void deleteSongFromPlaylist() throws RemoteException {
         try {
             if (songPointer == view.getPlaylist().getSelectionModel().getSelectedIndex() && model.getPlayer() != null) {
                 model.getPlayer().dispose();
@@ -103,7 +108,7 @@ public class Controller {
     }
 
 
-    public void play() {
+    public void play() throws RemoteException{
 
         //If no different song is selected resume playback of paused song
         if(model.getPlayer() != null && songPointer == view.getPlaylist().getSelectionModel().getSelectedIndex() && model.getPlayer().getStatus() == MediaPlayer.Status.PAUSED){
@@ -175,7 +180,7 @@ public class Controller {
     }
 
 
-    public void pause() {
+    public void pause() throws RemoteException{
         try {
             if (!model.getPlaylist().isEmpty()) {
                 model.getPlayer().pause();
@@ -193,7 +198,7 @@ public class Controller {
         }
     }
 
-    public void next() {
+    public void next() throws RemoteException{
 
         if(model.getPlaylist().isEmpty()){
             playlistEmptyError();
@@ -221,10 +226,14 @@ public class Controller {
     }
 
     private void endOfMediaEvent() {
-        next();
+        try {
+            next();
+        } catch (RemoteException e){
+            e.printStackTrace();
+        }
     }
 
-    public void addSongsFromFolder(String folder) {
+    public void addSongsFromFolder(String folder){
         // initialize File object
         File file = new File(folder);
         // check if the specified pathname is directory first
@@ -267,14 +276,14 @@ public class Controller {
         view.getPauseButton().setSelected(!isPlaying);
     }
 
-    public void selectStrategy(){
+    public void selectStrategy() throws RemoteException{
 
         ser.setStrat((SerializableStrategy) view.getDropdown().getSelectionModel().getSelectedItem());
         System.out.println("select");
 
     }
 
-    public void load(){
+    public void load() throws RemoteException{
         try {
             ser.load(model);
             System.out.println("load");
@@ -285,7 +294,7 @@ public class Controller {
 
     }
 
-    public void save(){
+    public void save() throws RemoteException{
         try {
             ser.save(model);
             System.out.println("save");
