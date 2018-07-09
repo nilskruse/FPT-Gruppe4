@@ -17,7 +17,7 @@ import java.io.IOException;
 
 
 
-public class Controller {
+public class Controller implements interfaces.Controller{
 
     private Model model;
     private View view;
@@ -40,7 +40,7 @@ public class Controller {
         strats.add(new OpenJPAStrategy());
     }
 
-    private void add(Song s) {
+    public void add(Song s) {
 
         try {
             s.setId(IDGenerator.getNextID());
