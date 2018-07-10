@@ -14,16 +14,20 @@ import view.View;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 
-
-public class Controller implements interfaces.Controller{
+public class Controller extends UnicastRemoteObject implements interfaces.Controller{
 
     private Model model;
     private View view;
     private int songPointer;
     private Serialization ser = new Serialization();
     private ObservableList<SerializableStrategy> strats = FXCollections.observableArrayList();
+
+    public Controller() throws RemoteException {
+    }
 
     public void link(Model model, View view) {
         this.model = model;
