@@ -41,7 +41,7 @@ public class UDPClient {
                         continue;
                     }
 
-                    String time = new String(packet.getData(), 0, packet.getLength());
+                    String time = new String(packet.getData());
                     System.out.println(time);
                     //tbd: Methode - setPlayTime()
                     //Platform.runLater(() -> controller.setPlayTime(time));

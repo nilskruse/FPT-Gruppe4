@@ -1,6 +1,7 @@
 package sockets;
 
-import interfaces.Controller;
+import controller.TimeThread;
+import controller.Controller;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -18,7 +19,10 @@ public class UDPServer {
                 // Auf Paket warten
                 try {
                     socket.receive(packet);
-                    //Thread!!!!!!!!!!!!
+                    TimeThread tt = new TimeThread(packet, socket, sc);
+                    Thread t1 = new Thread(tt);
+                    t1.start();
+                    System.out.println("Thread gestartet");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
