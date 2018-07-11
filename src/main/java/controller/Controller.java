@@ -100,7 +100,7 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
                 view.getPlayButton().setSelected(false);
             }
             model.getPlaylist().remove(view.getPlaylist().getSelectionModel().getSelectedIndex());
-            view.getPlayTime().setText("0:00 / 0:00");
+            view.getPlayTime().setText("00:00 / 00:00");
         } catch (NullPointerException | IndexOutOfBoundsException e){
             selectionEmptyError();
         }
