@@ -1,6 +1,6 @@
 package controller;
 
-import interfaces.Controller;
+import controller.Controller;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class TimeThread implements Runnable {
 
-    private Controller sc;
+    private Controller controller;
     private DatagramPacket packet;
     private DatagramSocket socket;
 
@@ -36,7 +36,7 @@ public class TimeThread implements Runnable {
 
                 String time = new String();
                 //tbd: Methode getTime();
-                //time = sc.getTime();
+                //time = controller.getTime();
                 byte[] myTime =  time.getBytes();
 
                 // Paket mit neuen Daten (Datum) als Antwort vorbereiten
@@ -62,9 +62,9 @@ public class TimeThread implements Runnable {
     }
 
 
-    public TimeThread (DatagramPacket packet, DatagramSocket socket, controller.Controller sc) throws SocketException {
+    public TimeThread (DatagramPacket packet, DatagramSocket socket, controller.Controller controller) throws SocketException {
         this.packet = packet;
         this.socket = socket;
-        this.sc = sc;
+        this.controller = controller;
     }
 }

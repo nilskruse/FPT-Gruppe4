@@ -10,7 +10,7 @@ import java.net.SocketException;
 
 public class UDPServer {
 
-    public UDPServer (Controller sc) {
+    public UDPServer (Controller controller) {
         // Socket erstellen unter dem der Server erreichbar ist
         try (DatagramSocket socket =  new DatagramSocket(5000);){
             while (true) {
@@ -19,7 +19,7 @@ public class UDPServer {
                 // Auf Paket warten
                 try {
                     socket.receive(packet);
-                    TimeThread tt = new TimeThread(packet, socket, sc);
+                    TimeThread tt = new TimeThread(packet, socket, controller);
                     Thread t1 = new Thread(tt);
                     t1.start();
                     System.out.println("Thread gestartet");

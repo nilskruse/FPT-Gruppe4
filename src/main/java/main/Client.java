@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
+import sockets.TCPClient;
+import sockets.UDPClient;
 import view.View;
 
 import java.rmi.Naming;
@@ -22,8 +24,8 @@ public class Client extends Application {
         Model model = new Model();
         View view = new View();
 
-        Controller cc = (Controller)Naming.lookup("//localhost:1099/controller");
-        cc.link(model, view);
+        Controller controller = (Controller)Naming.lookup("//localhost:1099/controller");
+        controller.link(model, view);
 
 
         // JavaFX new
@@ -31,5 +33,9 @@ public class Client extends Application {
         primaryStage.setTitle("MUSICPLAYER");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        //Starten?? Als Threads?
+        UDPClient udpClient = new UDPClient(controller);
+        TCPClient tcpClient = new TCPClient(controller, "client", "1234");
     }
 }

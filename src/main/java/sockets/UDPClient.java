@@ -1,6 +1,6 @@
 package sockets;
 
-import interfaces.Controller;
+import controller.Controller;
 import javafx.application.Platform;
 
 import java.io.IOException;
