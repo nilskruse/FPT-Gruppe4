@@ -10,7 +10,7 @@ public class TCPClient {
 
     public TCPClient(Controller controller, String clientName, String password) {
 
-        try (Socket server = new Socket("localhost", 3141);
+        try (Socket server = new Socket("localhost", 5020);
              InputStream in = server.getInputStream();
              PrintWriter out = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));) {
 

@@ -14,7 +14,7 @@ public class UDPServer {
         // Socket erstellen unter dem der Server erreichbar ist
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(3431);
+            socket = new DatagramSocket(5020);
             while (true) {
                 // Neues Paket anlegen
                 DatagramPacket packet = new DatagramPacket(new byte[5], 5);

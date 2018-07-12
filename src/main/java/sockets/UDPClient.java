@@ -28,7 +28,7 @@ public class UDPClient {
 
                     // Paket mit der Anfrage vorbereiten
                     DatagramPacket packet = new DatagramPacket(buffer,
-                            buffer.length, ia, 3431);
+                            buffer.length, ia, 5020);
                     // Paket versenden
                     dSocket.send(packet);
 
