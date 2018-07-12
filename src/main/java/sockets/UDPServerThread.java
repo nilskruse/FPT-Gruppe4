@@ -44,7 +44,12 @@ class UDPServerThread extends Thread {
             if (keyword.equals("TIME")) {
                     // hier wird die zeit in ein Paket gepackt
                // String time =  contr.getPlayTime();
-                byte[] myTime = "99:99/99:99".getBytes();
+                String time = contr.getPlayTime();
+                System.out.println(time);
+                if(time == null){
+                    time = "00:00 / 00:00";
+                }
+                byte[] myTime = time.getBytes();
 
                 // Paket mit neuen Daten als Antwort vorbereiten
                 packet = new DatagramPacket(myTime, myTime.length, address, port);
@@ -60,7 +65,7 @@ class UDPServerThread extends Thread {
                 byte[] myDate = new byte[1024];
                 myDate = new String("Command unknown").getBytes();
                 try {
-                    sleep(5000);
+                    sleep(1000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }

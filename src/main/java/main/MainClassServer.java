@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
+import sockets.UDPServer;
 import view.View;
 
 public class MainClassServer extends Application{
@@ -27,12 +28,14 @@ public class MainClassServer extends Application{
 
         Controller controller = new Controller();
         controller.link(model, view);
-
+        UDPServer server = new UDPServer(controller);
+        Thread t1 = new Thread(server);
+        t1.start();
 
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);
-        primaryStage.setTitle("MUSICPLAYER");
+        primaryStage.setTitle("MUSICPLAYER server");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

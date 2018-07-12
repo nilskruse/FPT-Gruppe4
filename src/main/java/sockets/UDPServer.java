@@ -6,15 +6,23 @@ import java.io.IOException;
 import controller.Controller;
 
 
-public class UDPServer {
-
+public class UDPServer implements Runnable{
+    private Controller contr;
 
 
     public UDPServer(Controller contr  ) {
+        this.contr = contr;
+
+
+    }
+
+
+    @Override
+    public void run() {
         // Socket erstellen unter dem der Server erreichbar ist
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(5020);
+            socket = new DatagramSocket(5000);
             while (true) {
                 // Neues Paket anlegen
                 DatagramPacket packet = new DatagramPacket(new byte[5], 5);
@@ -32,9 +40,7 @@ public class UDPServer {
         } finally {
             socket.close();
         }
-
     }
-
 }
 
 

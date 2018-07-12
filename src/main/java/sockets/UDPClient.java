@@ -7,9 +7,16 @@ import java.io.IOException;
 import java.net.*;
 
 
-public class UDPClient {
+public class UDPClient implements Runnable{
+    private Controller contr;
+    public UDPClient (Controller contr) {
+        this.contr = contr;
 
-    public UDPClient (Controller controller) {
+
+    }
+
+    @Override
+    public void run() {
         // Eigene Adresse erstellen
         InetAddress ia = null;
         try {
@@ -18,17 +25,18 @@ public class UDPClient {
             e2.printStackTrace();
         }
         // Socket für den Klienten anlegen
-        try (DatagramSocket dSocket = new DatagramSocket(5555)) {
+        try (DatagramSocket dSocket = new DatagramSocket(5556)) {
 
             try {
                 while (true) {
+                    System.out.println("client");
                     String command = "TIME:";
 
                     byte buffer[] = command.getBytes();
 
                     // Paket mit der Anfrage vorbereiten
                     DatagramPacket packet = new DatagramPacket(buffer,
-                            buffer.length, ia, 5020);
+                            buffer.length, ia, 5000);
                     // Paket versenden
                     dSocket.send(packet);
 
@@ -43,11 +51,11 @@ public class UDPClient {
 
                     String time = new String(packet.getData());
                     System.out.println(time);
-                   // ausgabe der Playtime
+                    // ausgabe der Playtime
                     // controller.setPlayTime(time);
-                        System.out.println("controller Set Playtime"+time);
+                    System.out.println("controller Set Playtime "+time);
                     //tbd: Methode - setPlayTime()
-                    Platform.runLater(() -> controller.setPlayTime(time));
+                    Platform.runLater(() -> contr.setPlayTime(time));
 
                     Thread.sleep(1000);
 
@@ -61,8 +69,6 @@ public class UDPClient {
         } catch (SocketException e1) {
             e1.printStackTrace();
         }
-
     }
-
 }
 

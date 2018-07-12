@@ -1,7 +1,5 @@
 package sockets;
 
-import com.oracle.tools.packager.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,7 +33,7 @@ public class TCPServerThread extends Thread {
 
 
             // Ergebnis auf Outputstream schreiben
-            out.write(a+b);
+            //out.write(a+b);
             out.flush();
 
             System.out.println("GGT von "+a+" und "+b+" ist "+a+"b:"+b);
