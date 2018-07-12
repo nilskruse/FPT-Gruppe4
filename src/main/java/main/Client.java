@@ -23,10 +23,9 @@ public class Client extends Application {
         // hier die Daten verwalten
         Model model = new Model();
         View view = new View();
-
-        Controller controller = (Controller)Naming.lookup("//localhost:1099/controller");
+        Controller controller = new Controller();
+       // Controller controller = (Controller)Naming.lookup("//localhost:1099/controller");
         controller.link(model, view);
-
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);
@@ -35,7 +34,7 @@ public class Client extends Application {
         primaryStage.show();
 
         //Starten?? Als Threads?
-        UDPClient udpClient = new UDPClient(controller);
-        TCPClient tcpClient = new TCPClient(controller, "client", "1234");
+        //UDPClient udpClient = new UDPClient(controller);
+       // TCPClient tcpClient = new TCPClient(controller, "client", "1234");
     }
 }

@@ -247,6 +247,7 @@ public  class View extends BorderPane {
         this.contr = contr;
     }
 
+
     public ComboBox getDropdown() {
         return dropdown;
     }
@@ -270,5 +271,6 @@ public  class View extends BorderPane {
     public Song getSelectedSong() {
         return selectedSong;
     }
+
 
 }

@@ -18,7 +18,7 @@ public class UDPClient {
             e2.printStackTrace();
         }
         // Socket für den Klienten anlegen
-        try (DatagramSocket dSocket = new DatagramSocket()) {
+        try (DatagramSocket dSocket = new DatagramSocket(5555)) {
 
             try {
                 while (true) {
@@ -28,7 +28,7 @@ public class UDPClient {
 
                     // Paket mit der Anfrage vorbereiten
                     DatagramPacket packet = new DatagramPacket(buffer,
-                            buffer.length, ia, 5000);
+                            buffer.length, ia, 3431);
                     // Paket versenden
                     dSocket.send(packet);
 
@@ -43,8 +43,11 @@ public class UDPClient {
 
                     String time = new String(packet.getData());
                     System.out.println(time);
+                   // ausgabe der Playtime
+                    // controller.setPlayTime(time);
+                        System.out.println("controller Set Playtime"+time);
                     //tbd: Methode - setPlayTime()
-                    //Platform.runLater(() -> controller.setPlayTime(time));
+                    Platform.runLater(() -> controller.setPlayTime(time));
 
                     Thread.sleep(1000);
 

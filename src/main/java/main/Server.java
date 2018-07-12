@@ -2,16 +2,10 @@ package main;
 
 import controller.Controller;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
-import sockets.TCPServer;
 import sockets.UDPServer;
 import view.View;
-
-import java.rmi.Naming;
-import java.rmi.Remote;
-import java.rmi.registry.LocateRegistry;
 
 public class Server extends Application {
 
@@ -27,24 +21,27 @@ public class Server extends Application {
         View view = new View();
         Controller controller = new Controller();
 
-        LocateRegistry.createRegistry(1099);
+       // LocateRegistry.createRegistry(1099);
 
-        Remote rs = controller;
-        Naming.rebind("//localhost:1099/controller", rs);
-        System.out.println("Server has started...");
+       // Remote rs = controller;
+       // Naming.rebind("//localhost:1099/controller", rs);
+
         controller.link(model, view);
+        System.out.println("Server has started...");
 
-
-        // JavaFX new
-        Scene scene  = new Scene(view, 700, 500);
-        primaryStage.setTitle("MUSICPLAYER");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        // Server hat keien Oberfläche startet Legentlich als CLI
+         //JavaFX new
+        //Scene scene  = new Scene(view, 700, 500);
+       // primaryStage.setTitle("MUSICPLAYER");
+       // primaryStage.setScene(scene);
+      //  primaryStage.show();
 
 
         //Starten?? Als Threads?
-        UDPServer udpServer = new UDPServer(controller);
-        TCPServer tcpServer = new TCPServer(controller);
+        UDPServer udpserver = new UDPServer(controller);
+
+        //TCPServer tcpServer = new TCPServer(controller);
+
 
     }
 }

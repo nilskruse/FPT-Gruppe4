@@ -23,6 +23,7 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
     private Model model;
     private View view;
     private int songPointer;
+    private String playTime;
     private Serialization ser = new Serialization();
     private ObservableList<SerializableStrategy> strats = FXCollections.observableArrayList();
 
@@ -169,7 +170,7 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
                     s = sNullmin +(int)tD.toMinutes() + ":"+ sNullsek + (int)(tD.toSeconds() % 60);
                     r = rNullmin +(int)d.toMinutes() + ":" +rNullsek + (int)(d.toSeconds() % 60);
                     view.getPlayTime().setText(r + " / " + s);
-
+                    this.playTime = r + " / " + s ;
             });
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             playlistEmptyError();
@@ -178,7 +179,14 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
         }
     }
 
-
+    public String getPlayTime()
+    {
+        return this.playTime;
+    }
+    public void setPlayTime(String time)
+    {
+        view.getPlayTime().setText(time);
+    }
     public void pause() {
         try {
             if (!model.getPlaylist().isEmpty()) {

@@ -1,16 +1,14 @@
 package main;
 
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
 import view.View;
-import controller.Controller;
 
-public class MainClient extends Application{
-
-    // ist noch aus der eigentlichen Main Class kopiert muss noch angepasst werden
+public class MainClassServer extends Application{
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -19,7 +17,7 @@ public class MainClient extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-
+        
 
         // hier die Daten verwalten
         Model model = new Model();
