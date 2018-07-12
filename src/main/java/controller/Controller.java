@@ -135,33 +135,34 @@ public class Controller {
             model.getPlayer().setOnEndOfMedia(this::endOfMediaEvent);
 
             //Zeit anzeigen
-            model.getPlayer().currentTimeProperty().addListener((ChangeListener) (o, oldVal, newVal) -> {
-
-                Duration d = (Duration) newVal;
-                Duration tD = model.getPlayer().getTotalDuration();
-                String r,s;
-                if(((int)d.toSeconds() % 60) < 10){
-                    r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
-                }else{
-                    r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
-                }
-
-                if(((int) tD.toSeconds() % 60) < 10){
-                    s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
-                }else{
-                    s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
-                }
-
-                view.getPlayTime().setText(r + " / " + s);
-
-            });
+            //model.getPlayer().currentTimeProperty().addListener(e -> view.getPlayTime().setText(getTime()));
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             playlistEmptyError();
             view.getPlayButton().setSelected(false);
 
         }
     }
+    public String getTime(){
 
+        Duration d = model.getPlayer().currentTimeProperty().getValue();
+        Duration tD = model.getPlayer().getTotalDuration();
+        String r,s;
+        if(((int)d.toSeconds() % 60) < 10){
+            r = (int)d.toMinutes() + ":0" + (int)(d.toSeconds() % 60);
+        }else{
+            r = (int)d.toMinutes() + ":" + (int)(d.toSeconds() % 60);
+        }
+
+        if(((int) tD.toSeconds() % 60) < 10){
+            s = (int)tD.toMinutes() + ":0" + (int)(tD.toSeconds() % 60);
+        }else{
+            s = (int)tD.toMinutes() + ":" + (int)(tD.toSeconds() % 60);
+        }
+        return r + " / " + s;
+    }
+    public void setTime(String s){
+        view.getPlayTime().setText(s);
+    }
 
     public void pause() {
         try {
