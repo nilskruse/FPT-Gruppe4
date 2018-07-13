@@ -2,6 +2,9 @@ package main;
 
 
 import controller.Controller;
+import controller.Server;
+import controller.ServerController;
+import interfaces.ServerRemote;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,6 +13,8 @@ import sockets.TCPServer;
 import sockets.UDPServer;
 import view.View;
 
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 
 public class MainClassServer extends Application{
@@ -20,7 +25,7 @@ public class MainClassServer extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        ArrayList<String> clientlist = new ArrayList<>();
         
 
         // hier die Daten verwalten
@@ -29,20 +34,24 @@ public class MainClassServer extends Application{
         View view = new View();
 
 
-        Controller controller = new Controller();
+        Controller controller = new ServerController(clientlist);
         controller.link(model, view);
 
+        TCPServer tcpserver = new TCPServer("server1","abc",clientlist);
+        Thread t2 = new Thread(tcpserver);
+        t2.start();
+
+
+
+        LocateRegistry.createRegistry(1099);
+
+        ServerRemote rmiserver = new Server(controller,clientlist);
+        Naming.rebind("server1",rmiserver);
 
         UDPServer server = new UDPServer(controller);
         Thread t1 = new Thread(server);
         t1.start();
 
-
-        ArrayList<String> clientlist = new ArrayList<>();
-
-        TCPServer tcpserver = new TCPServer("server1","abc",clientlist);
-        Thread t2 = new Thread(tcpserver);
-        t2.start();
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);

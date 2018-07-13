@@ -1,9 +1,11 @@
 package controller;
 
+import interfaces.Playlist;
 import interfaces.SerializableStrategy;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -19,7 +21,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 
-public class Controller extends UnicastRemoteObject implements interfaces.Controller{
+public class Controller implements interfaces.Controller{
 
     private Model model;
     private View view;
@@ -28,8 +30,6 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
     private Serialization ser = new Serialization();
     private ObservableList<SerializableStrategy> strats = FXCollections.observableArrayList();
 
-    public Controller() throws RemoteException {
-    }
 
     public void link(Model model, View view) {
         this.model = model;
@@ -44,6 +44,8 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
         strats.add(new XMLStrategy());
         strats.add(new JDBCStrategy());
         strats.add(new OpenJPAStrategy());
+
+
     }
 
     public void add(Song s) {
@@ -56,10 +58,9 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
         }
     }
 
-    public void addToPlaylist() {
-        Song selectedSongInLibrary = view.getList().getSelectionModel().getSelectedItem();
-        if (selectedSongInLibrary != null) {
-            model.getPlaylist().addSong(selectedSongInLibrary);
+    public void addToPlaylist(int index) {
+        if (index != -1) {
+            model.getPlaylist().addSong(model.getLibrary().get(index));
         } else {
             selectionEmptyError();
         }
@@ -78,7 +79,8 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
 
     }
 
-    public void changeSongProperties(Song s, String title, String album, String interpret) {
+    public void changeSongProperties(int libindex, String title, String album, String interpret) {
+        Song s = model.getLibrary().get(libindex - 1);
         try {
             if ( s != null )
             {
@@ -95,13 +97,13 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
         }
     }
 
-    public void deleteSongFromPlaylist() {
+    public void deleteSongFromPlaylist(int index) {
         try {
-            if (songPointer == view.getPlaylist().getSelectionModel().getSelectedIndex() && model.getPlayer() != null) {
+            if (songPointer == index && model.getPlayer() != null) {
                 model.getPlayer().dispose();
                 view.getPlayButton().setSelected(false);
             }
-            model.getPlaylist().remove(view.getPlaylist().getSelectionModel().getSelectedIndex());
+            model.getPlaylist().remove(index);
             view.getPlayTime().setText("00:00 / 00:00");
         } catch (NullPointerException | IndexOutOfBoundsException e){
             selectionEmptyError();
@@ -306,6 +308,21 @@ public class Controller extends UnicastRemoteObject implements interfaces.Contro
             SelectedStrategyError();
         }
 
+    }
+
+    public ListView<Song> getLibraryView(){
+        return view.getList();
+    }
+    public ListView<Song> getPlaylistView(){
+
+        return view.getPlaylist();
+    }
+    public Playlist getLibrary(){
+        return model.getLibrary();
+    }
+    public Playlist getPlaylist(){
+
+        return model.getPlaylist();
     }
 
 }

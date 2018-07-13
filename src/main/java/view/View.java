@@ -134,6 +134,7 @@ public  class View extends BorderPane {
 
         listview.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2){
+                selectedSong = listview.getSelectionModel().getSelectedItem();
                 contr.play();
             }
             if(!listview.getProperties().isEmpty()){
@@ -146,7 +147,7 @@ public  class View extends BorderPane {
         });
 
         commitButton.setOnAction(e ->{
-            contr.changeSongProperties(selectedSong, titleInput.getText(), albumInput.getText(), interpretInput.getText());
+            contr.changeSongProperties((int)selectedSong.getId(), titleInput.getText(), albumInput.getText(), interpretInput.getText());
             listview.refresh();
             libraryview.refresh();
         });
@@ -166,12 +167,12 @@ public  class View extends BorderPane {
             }
         });
         addToPlaylistButton.setOnAction(e ->{
-            contr.addToPlaylist();
+            contr.addToPlaylist(libraryview.getSelectionModel().getSelectedIndex());
             listview.refresh();
         } );
 
         deleteButton.setOnAction(e ->{
-            contr.deleteSongFromPlaylist();
+            contr.deleteSongFromPlaylist(listview.getSelectionModel().getSelectedIndex());
             listview.refresh();
         });
 

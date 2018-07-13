@@ -1,7 +1,11 @@
 package main;
 
 
+import controller.Client;
+import controller.ClientController;
 import controller.SyncedArrayList;
+import interfaces.ClientRemote;
+import interfaces.ServerRemote;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,6 +15,9 @@ import sockets.UDPClient;
 import sockets.UDPServer;
 import view.View;
 import controller.Controller;
+
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 
 public class MainClassClient extends Application{
     public static void main(String[] args) {
@@ -25,19 +32,29 @@ public class MainClassClient extends Application{
 
         // hier die Daten verwalten
         Model model = new Model();
-
         View view = new View();
 
+        LocateRegistry.createRegistry(1100);
 
-        Controller controller = new Controller();
+        TCPClient tcpclient = new TCPClient("client1","abc");
+
+        ClientRemote rmiclient = new Client(view);
+        Naming.rebind("client1",rmiclient);
+
+        String servicename = tcpclient.connect();
+
+        ServerRemote rmis = (ServerRemote) Naming.lookup("//localhost/" + servicename);
+
+
+        Controller controller = new ClientController(rmis);
         controller.link(model, view);
+
 
         UDPClient client = new UDPClient(controller);
         Thread t1 = new Thread(client);
         t1.start();
 
-        TCPClient tcpclient = new TCPClient("client1","abc");
-        System.out.println(tcpclient.connect());
+        rmis.update();
 
         // JavaFX new
         Scene scene  = new Scene(view, 700, 500);

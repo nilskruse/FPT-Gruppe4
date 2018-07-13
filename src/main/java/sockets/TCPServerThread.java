@@ -21,13 +21,12 @@ public class TCPServerThread extends Thread {
     public void run() {
         String msg = "EchoServer: Verbindung " + name;
         System.out.println(msg + " hergestellt");
-        StringWriter writer = new StringWriter();
 
         try (DataInputStream in = new DataInputStream(socket.getInputStream());
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
             try {
-                sleep((long) (Math.random() * 10000));
+                sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
