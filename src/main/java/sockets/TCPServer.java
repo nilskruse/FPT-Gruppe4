@@ -3,20 +3,29 @@ package sockets;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
-public class TCPServer {
-    public static void main(String[] args) {
+public class TCPServer implements Runnable{
+    private String password;
+    private ArrayList<String> clientlist;
+    private String servername;
+
+    public TCPServer(String servername,String password, ArrayList<String> clientlist){
+        this.servername = servername;
+        this.password = password;
+        this.clientlist = clientlist;
+    }
+    public void run() {
 
         // ServerSocket erstellen
-        try (ServerSocket server = new ServerSocket(3141);) {
+        try (ServerSocket server = new ServerSocket(5020)) {
             int connections = 0;
-            // Timeout nach 1 Minute
-            // server.setSoTimeout(60000);
+
             while (true) {
                 try {
                     Socket socket = server.accept();
                     connections++;
-                    new TCPServerThread(connections, socket).start();
+                    new TCPServerThread(connections,servername, socket, password, clientlist).start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

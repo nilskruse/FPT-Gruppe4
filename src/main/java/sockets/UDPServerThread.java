@@ -30,7 +30,7 @@ class UDPServerThread extends Thread {
         int len = packet.getLength();
         byte[] data = packet.getData();
 
-        System.out.println("Anfrage von "+address+" vom Port "+port+" mit der Länge "+len+"\n"+new String(data));
+        //System.out.println("Anfrage von "+address+" vom Port "+port+" mit der Länge "+len+"\n"+new String(data));
 
         // Nutzdaten in ein Stringobjekt übergeben
         String da = new String(packet.getData());
@@ -45,7 +45,6 @@ class UDPServerThread extends Thread {
                     // hier wird die zeit in ein Paket gepackt
                // String time =  contr.getPlayTime();
                 String time = contr.getPlayTime();
-                System.out.println(time);
                 if(time == null){
                     time = "00:00 / 00:00";
                 }

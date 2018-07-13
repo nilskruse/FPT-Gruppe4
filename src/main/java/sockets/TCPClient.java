@@ -1,27 +1,31 @@
 package sockets;
 
-import controller.Controller;
-
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class TCPClient {
 
-    public TCPClient(Controller controller, String clientName, String password) {
+    private String clientName;
+    private String password;
 
+    public TCPClient( String clientName, String password) {
+        this.clientName = clientName;
+        this.password = password;
+    }
+    public String connect(){
         try (Socket server = new Socket("localhost", 5020);
-             InputStream in = server.getInputStream();
-             PrintWriter out = new PrintWriter(new OutputStreamWriter(server.getOutputStream()));) {
+             DataInputStream in = new DataInputStream(server.getInputStream());
+             DataOutputStream out = new DataOutputStream(server.getOutputStream())) {
 
-            out.write(clientName);
-            out.write(password);
+
+            out.writeUTF(clientName);
+            out.writeUTF(password);
 
             out.flush();
 
-            int result = in.read();
-
-            //Was muss jetzt passieren??
+            String result = in.readUTF();
+            return result;
 
 
         } catch (UnknownHostException e) {
@@ -29,5 +33,6 @@ public class TCPClient {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+        return null;
     }
 }

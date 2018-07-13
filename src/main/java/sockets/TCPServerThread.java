@@ -1,18 +1,21 @@
 package sockets;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class TCPServerThread extends Thread {
     private int name;
     private Socket socket;
+    private ArrayList<String> clientlist;
+    private String password,servername;
 
-    public TCPServerThread(int name, Socket socket) {
+    public TCPServerThread(int name,String servername, Socket socket,String password,ArrayList<String> clientlist) {
+        this.servername = servername;
         this.name = name;
         this.socket = socket;
+        this.clientlist = clientlist;
+        this.password = password;
     }
 
     public void run() {
@@ -20,23 +23,28 @@ public class TCPServerThread extends Thread {
         System.out.println(msg + " hergestellt");
         StringWriter writer = new StringWriter();
 
-        try (InputStream in = socket.getInputStream();
-             OutputStream out = socket.getOutputStream()) {
+        try (DataInputStream in = new DataInputStream(socket.getInputStream());
+             DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
+
             try {
                 sleep((long) (Math.random() * 10000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            String a = String.valueOf(in.read());
-            String b = String.valueOf(in.read());
 
 
+            String name = in.readUTF();
+            String pass = in.readUTF();
+            System.out.println(name + ":" + pass);
 
-            // Ergebnis auf Outputstream schreiben
-            //out.write(a+b);
+            if(pass.equals(password)){
+                clientlist.add(name);
+                System.out.println(name + " authentifiziert!");
+            }
+
+            out.writeUTF(servername);
             out.flush();
 
-            System.out.println("GGT von "+a+" und "+b+" ist "+a+"b:"+b);
             System.out.println("Verbindung " + name + " wird beendet");
 
         } catch (IOException e1) {

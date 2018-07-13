@@ -29,7 +29,6 @@ public class UDPClient implements Runnable{
 
             try {
                 while (true) {
-                    System.out.println("client");
                     String command = "TIME:";
 
                     byte buffer[] = command.getBytes();
@@ -50,11 +49,6 @@ public class UDPClient implements Runnable{
                     }
 
                     String time = new String(packet.getData());
-                    System.out.println(time);
-                    // ausgabe der Playtime
-                    // controller.setPlayTime(time);
-                    System.out.println("controller Set Playtime "+time);
-                    //tbd: Methode - setPlayTime()
                     Platform.runLater(() -> contr.setPlayTime(time));
 
                     Thread.sleep(1000);

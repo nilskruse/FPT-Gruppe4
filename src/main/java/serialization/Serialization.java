@@ -1,4 +1,4 @@
-package controller;
+package serialization;
 
 import interfaces.SerializableStrategy;
 import model.Model;
