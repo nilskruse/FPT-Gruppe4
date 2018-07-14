@@ -1,7 +1,7 @@
 package serialization;
 
-import controller.IDGenerator;
-import controller.IDOverFlowException;
+import id.IDGenerator;
+import id.IDOverFlowException;
 import interfaces.Playlist;
 import interfaces.SerializableStrategy;
 import interfaces.Song;

@@ -1,4 +1,4 @@
-package sockets;
+package net;
 
 import controller.Controller;
 import javafx.application.Platform;
@@ -9,8 +9,10 @@ import java.net.*;
 
 public class UDPClient implements Runnable{
     private Controller contr;
-    public UDPClient (Controller contr) {
+    private int port;
+    public UDPClient (Controller contr, int port) {
         this.contr = contr;
+        this.port = port;
 
 
     }
@@ -25,7 +27,7 @@ public class UDPClient implements Runnable{
             e2.printStackTrace();
         }
         // Socket für den Klienten anlegen
-        try (DatagramSocket dSocket = new DatagramSocket(5556)) {
+        try (DatagramSocket dSocket = new DatagramSocket(port)) {
 
             try {
                 while (true) {

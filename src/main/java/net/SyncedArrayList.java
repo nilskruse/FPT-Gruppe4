@@ -1,4 +1,4 @@
-package controller;
+package net;
 
 import java.util.ArrayList;
 

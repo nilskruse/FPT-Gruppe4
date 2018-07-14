@@ -1,4 +1,4 @@
-package controller;
+package net;
 
 import interfaces.ClientRemote;
 import interfaces.Controller;

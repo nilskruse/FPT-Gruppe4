@@ -1,4 +1,4 @@
-package sockets;
+package net;
 
 import controller.Controller;
 
@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Date;
 import java.util.Scanner;
 
 class UDPServerThread extends Thread {

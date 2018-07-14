@@ -2,15 +2,15 @@ package main;
 
 
 import controller.Controller;
-import controller.Server;
+import net.Server;
 import controller.ServerController;
 import interfaces.ServerRemote;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
-import sockets.TCPServer;
-import sockets.UDPServer;
+import net.TCPServer;
+import net.UDPServer;
 import view.View;
 
 import java.rmi.Naming;

@@ -1,4 +1,4 @@
-package controller;
+package id;
 
 public class IDGenerator {
     private static long currentID = 1;

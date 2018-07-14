@@ -1,18 +1,16 @@
 package main;
 
 
-import controller.Client;
+import net.Client;
 import controller.ClientController;
-import controller.SyncedArrayList;
 import interfaces.ClientRemote;
 import interfaces.ServerRemote;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
-import sockets.TCPClient;
-import sockets.UDPClient;
-import sockets.UDPServer;
+import net.TCPClient;
+import net.UDPClient;
 import view.View;
 import controller.Controller;
 
@@ -20,6 +18,8 @@ import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
 public class MainClassClient extends Application{
+    private int clientnumber = 1;
+    private String clientname = "client" + clientnumber;
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -34,12 +34,13 @@ public class MainClassClient extends Application{
         Model model = new Model();
         View view = new View();
 
-        LocateRegistry.createRegistry(1100);
 
-        TCPClient tcpclient = new TCPClient("client1","abc");
 
+        TCPClient tcpclient = new TCPClient(clientname,"abc");
+
+        LocateRegistry.createRegistry(1099 + clientnumber);
         ClientRemote rmiclient = new Client(view);
-        Naming.rebind("client1",rmiclient);
+        Naming.rebind(clientname,rmiclient);
 
         String servicename = tcpclient.connect();
 
@@ -50,7 +51,7 @@ public class MainClassClient extends Application{
         controller.link(model, view);
 
 
-        UDPClient client = new UDPClient(controller);
+        UDPClient client = new UDPClient(controller,5555 + clientnumber);
         Thread t1 = new Thread(client);
         t1.start();
 
