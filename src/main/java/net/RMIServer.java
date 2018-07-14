@@ -12,10 +12,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class Server extends UnicastRemoteObject implements ServerRemote {
+public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     private Controller contr;
     private ArrayList<String> clientlist;
-    public Server(Controller contr,ArrayList<String> clientlist) throws RemoteException {
+    public RMIServer(Controller contr, ArrayList<String> clientlist) throws RemoteException {
         super();
         this.contr = contr;
         this.clientlist = clientlist;

@@ -1,7 +1,6 @@
 package main;
 
 
-import net.Client;
 import controller.ClientController;
 import interfaces.ClientRemote;
 import interfaces.ServerRemote;
@@ -9,6 +8,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
+import net.RMIClient;
 import net.TCPClient;
 import net.UDPClient;
 import view.View;
@@ -39,7 +39,7 @@ public class MainClassClient extends Application{
         TCPClient tcpclient = new TCPClient(clientname,"abc");
 
         LocateRegistry.createRegistry(1099 + clientnumber);
-        ClientRemote rmiclient = new Client(view);
+        ClientRemote rmiclient = new RMIClient(view);
         Naming.rebind(clientname,rmiclient);
 
         String servicename = tcpclient.connect();

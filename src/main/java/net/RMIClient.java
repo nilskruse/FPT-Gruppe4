@@ -11,9 +11,9 @@ import view.View;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Client extends UnicastRemoteObject implements ClientRemote {
+public class RMIClient extends UnicastRemoteObject implements ClientRemote {
     private View view;
-    public Client(View view) throws RemoteException {
+    public RMIClient(View view) throws RemoteException {
         super();
         this.view = view;
     }

@@ -2,7 +2,7 @@ package main;
 
 
 import controller.Controller;
-import net.Server;
+import net.RMIServer;
 import controller.ServerController;
 import interfaces.ServerRemote;
 import javafx.application.Application;
@@ -45,7 +45,7 @@ public class MainClassServer extends Application{
 
         LocateRegistry.createRegistry(1099);
 
-        ServerRemote rmiserver = new Server(controller,clientlist);
+        ServerRemote rmiserver = new RMIServer(controller,clientlist);
         Naming.rebind("server1",rmiserver);
 
         UDPServer server = new UDPServer(controller);
