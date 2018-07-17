@@ -38,11 +38,12 @@ public class TCPServerThread extends Thread {
 
             if(pass.equals(password)){
                 clientlist.add(name);
+                out.writeUTF(servername);
+                out.flush();
                 System.out.println(name + " authentifiziert!");
             }
 
-            out.writeUTF(servername);
-            out.flush();
+
 
             System.out.println("Verbindung " + name + " wird beendet");
 
