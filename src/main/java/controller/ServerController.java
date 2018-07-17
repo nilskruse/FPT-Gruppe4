@@ -10,44 +10,45 @@ import java.util.ArrayList;
 
 public class ServerController extends Controller {
     private ArrayList<String> clientlist;
+
     public ServerController(ArrayList<String> clientlist){
         super();
         this.clientlist = clientlist;
     }
 
     @Override
-    public void play() {
+    public synchronized void play() {
         super.play();
         updateAllClients();
     }
 
     @Override
-    public void next() {
+    public synchronized void next() {
         super.next();
         updateAllClients();
     }
 
     @Override
-    public void pause() {
+    public synchronized void pause() {
         super.pause();
         updateAllClients();
     }
 
 
     @Override
-    public void addToPlaylist(int index){
+    public synchronized void addToPlaylist(int index){
         super.addToPlaylist(index);
         updateAllClients();
     }
 
     @Override
-    public void deleteSongFromPlaylist(int index) {
+    public synchronized void deleteSongFromPlaylist(int index) {
         super.deleteSongFromPlaylist(index);
         updateAllClients();
     }
 
     @Override
-    public void changeSongProperties(int libindex, String title, String album, String interpret) {
+    public synchronized void changeSongProperties(int libindex, String title, String album, String interpret) {
         super.changeSongProperties(libindex, title, album, interpret);
         getPlaylistView().refresh();
         getLibraryView().refresh();
@@ -55,13 +56,13 @@ public class ServerController extends Controller {
     }
 
     @Override
-    public void addAllToPlaylist() {
+    public synchronized void addAllToPlaylist() {
         super.addAllToPlaylist();
         updateAllClients();
     }
 
     @Override
-    public void load() {
+    public synchronized void load() {
         super.load();
         updateAllClients();
     }

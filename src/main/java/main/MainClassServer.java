@@ -41,8 +41,6 @@ public class MainClassServer extends Application{
         Thread t2 = new Thread(tcpserver);
         t2.start();
 
-
-
         LocateRegistry.createRegistry(1099);
 
         ServerRemote rmiserver = new RMIServer(controller,clientlist);

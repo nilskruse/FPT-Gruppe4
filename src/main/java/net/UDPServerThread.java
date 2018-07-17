@@ -60,8 +60,8 @@ class UDPServerThread extends Thread {
                 }
 
             } else {
-                byte[] myDate = new byte[1024];
-                myDate = new String("Command unknown").getBytes();
+                byte[] nothing = new byte[1024];
+                nothing = new String("Command unknown").getBytes();
                 try {
                     sleep(1000);
                 } catch (InterruptedException e1) {
@@ -69,7 +69,7 @@ class UDPServerThread extends Thread {
                 }
                 // Paket mit Information, dass das Schlüsselwort ungültig ist als
                 // Antwort vorbereiten
-                packet = new DatagramPacket(myDate, myDate.length, address, port);
+                packet = new DatagramPacket(nothing, nothing.length, address, port);
                 try {
                     // Paket versenden
                     socket.send(packet);

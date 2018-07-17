@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     private Controller contr;
     private ArrayList<String> clientlist;
+
     public RMIServer(Controller contr, ArrayList<String> clientlist) throws RemoteException {
         super();
         this.contr = contr;
@@ -37,48 +38,32 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     }
 
     @Override
-    public synchronized void addSongToPlaylist(int index) throws RemoteException {
+    public void addSongToPlaylist(int index) throws RemoteException {
         Platform.runLater(() -> {
-            try {
-                contr.addToPlaylist(index);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            contr.addToPlaylist(index);
         });
 
     }
 
     @Override
-    public synchronized void deleteSongFromPlaylist(int index) throws RemoteException {
+    public void deleteSongFromPlaylist(int index) throws RemoteException {
         Platform.runLater(() -> {
-            try {
-                contr.deleteSongFromPlaylist(index);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            contr.deleteSongFromPlaylist(index);
         });
 
     }
 
     @Override
-    public synchronized void addAllToPlaylist() throws RemoteException {
+    public void addAllToPlaylist() throws RemoteException {
         Platform.runLater(() -> {
-            try {
-                contr.addAllToPlaylist();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            contr.addAllToPlaylist();
         });
     }
 
     @Override
-    public synchronized void changeSongProperties(int libindex, String title, String album, String interpret) throws RemoteException {
+    public void changeSongProperties(int libindex, String title, String album, String interpret) throws RemoteException {
         Platform.runLater(() -> {
-            try {
-                contr.changeSongProperties(libindex,title,album,interpret);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            contr.changeSongProperties(libindex,title,album,interpret);
         });
 
     }
@@ -86,11 +71,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     @Override
     public void load() throws RemoteException {
         Platform.runLater(() -> {
-            try {
-                contr.load();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            contr.load();
         });
 
     }

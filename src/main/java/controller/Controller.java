@@ -182,14 +182,16 @@ public class Controller implements interfaces.Controller{
         }
     }
 
-    public String getPlayTime()
-    {
+    public String getPlayTime() {
+
         return this.playTime;
     }
-    public void setPlayTime(String time)
-    {
+
+    public void setPlayTime(String time) {
+
         view.getPlayTime().setText(time);
     }
+
     public void pause() {
         try {
             if (!model.getPlaylist().isEmpty()) {

@@ -7,21 +7,20 @@ import view.View;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-    //Client braucht noch andere Methoden? müssen alle remoteexception schmeißen?
-    public interface Controller extends Remote {
-        void link(Model model, View view) throws RemoteException;
-        void add(Song s) throws RemoteException;
-        void addToPlaylist (int index) throws RemoteException;
-        void addAllToPlaylist() throws RemoteException;
-        void changeSongProperties(int libindex, String title, String album, String interpret) throws RemoteException;
-        void deleteSongFromPlaylist(int index) throws RemoteException;
-        void play () throws RemoteException;
-        void pause () throws RemoteException;
-        void next () throws RemoteException;
-        void addSongsFromFolder(String folder) throws RemoteException;
-        void selectStrategy() throws RemoteException;
-        void load() throws RemoteException;
-        void save() throws RemoteException;
+    public interface Controller {
+        void link(Model model, View view);
+        void add(Song s);
+        void addToPlaylist (int index);
+        void addAllToPlaylist();
+        void changeSongProperties(int libindex, String title, String album, String interpret);
+        void deleteSongFromPlaylist(int index);
+        void play ();
+        void pause ();
+        void next ();
+        void addSongsFromFolder(String folder);
+        void selectStrategy();
+        void load();
+        void save();
         Playlist getLibrary();
         Playlist getPlaylist();
         ListView<Song> getLibraryView();
