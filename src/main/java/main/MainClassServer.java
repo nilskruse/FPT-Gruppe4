@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
+import net.SyncedArrayList;
 import net.TCPServer;
 import net.UDPServer;
 import view.View;
@@ -25,7 +26,7 @@ public class MainClassServer extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ArrayList<String> clientlist = new ArrayList<>();
+        SyncedArrayList<String> clientlist = new SyncedArrayList<>();
         
 
         // hier die Daten verwalten
