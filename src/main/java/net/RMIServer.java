@@ -37,7 +37,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     }
 
     @Override
-    public void addSongToPlaylist(int index) throws RemoteException {
+    public synchronized void addSongToPlaylist(int index) throws RemoteException {
         Platform.runLater(() -> {
             try {
                 contr.addToPlaylist(index);
@@ -49,7 +49,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     }
 
     @Override
-    public void deleteSongFromPlaylist(int index) throws RemoteException {
+    public synchronized void deleteSongFromPlaylist(int index) throws RemoteException {
         Platform.runLater(() -> {
             try {
                 contr.deleteSongFromPlaylist(index);
@@ -61,7 +61,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     }
 
     @Override
-    public void addAllToPlaylist() throws RemoteException {
+    public synchronized void addAllToPlaylist() throws RemoteException {
         Platform.runLater(() -> {
             try {
                 contr.addAllToPlaylist();
@@ -72,7 +72,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerRemote {
     }
 
     @Override
-    public void changeSongProperties(int libindex, String title, String album, String interpret) throws RemoteException {
+    public synchronized void changeSongProperties(int libindex, String title, String album, String interpret) throws RemoteException {
         Platform.runLater(() -> {
             try {
                 contr.changeSongProperties(libindex,title,album,interpret);
