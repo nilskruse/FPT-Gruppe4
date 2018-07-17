@@ -16,8 +16,6 @@ public class TCPServer implements Runnable{
         this.clientlist = clientlist;
     }
     public void run() {
-
-        // ServerSocket erstellen
         try (ServerSocket server = new ServerSocket(5020)) {
             int connections = 0;
 

@@ -19,14 +19,12 @@ public class UDPClient implements Runnable{
 
     @Override
     public void run() {
-        // Eigene Adresse erstellen
         InetAddress ia = null;
         try {
             ia = InetAddress.getByName("localhost");
-        } catch (UnknownHostException e2) {
-            e2.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
-        // Socket für den Klienten anlegen
         try (DatagramSocket dSocket = new DatagramSocket(port)) {
 
             try {
@@ -34,11 +32,8 @@ public class UDPClient implements Runnable{
                     String command = "TIME:";
 
                     byte buffer[] = command.getBytes();
-
-                    // Paket mit der Anfrage vorbereiten
                     DatagramPacket packet = new DatagramPacket(buffer,
                             buffer.length, ia, 5000);
-                    // Paket versenden
                     dSocket.send(packet);
 
                     byte answer[] = new byte[1024];

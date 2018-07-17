@@ -19,7 +19,7 @@ public class TCPServerThread extends Thread {
     }
 
     public void run() {
-        String msg = "EchoServer: Verbindung " + name;
+        String msg = "Server: Verbindung " + name;
         System.out.println(msg + " hergestellt");
 
         try (DataInputStream in = new DataInputStream(socket.getInputStream());

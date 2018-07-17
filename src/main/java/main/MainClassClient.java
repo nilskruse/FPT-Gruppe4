@@ -55,6 +55,7 @@ public class MainClassClient extends Application{
         Thread t1 = new Thread(client);
         t1.start();
 
+        //neuste Version holen
         rmis.update();
 
         // JavaFX new
