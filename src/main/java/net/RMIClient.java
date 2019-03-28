@@ -1,36 +1,37 @@
 package net;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 import interfaces.ClientRemote;
 import interfaces.Playlist;
 import interfaces.Song;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import model.Model;
 import view.View;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-
 public class RMIClient extends UnicastRemoteObject implements ClientRemote {
-    private View view;
-    public RMIClient(View view) throws RemoteException {
-        super();
-        this.view = view;
-    }
+	private static final long serialVersionUID = 1L;
+	private transient View view;
 
-    @Override
-    public void updateView(Playlist library, Playlist playlist,int lib, int pl) throws RemoteException,IllegalStateException {
+	public RMIClient(View view) throws RemoteException {
+		super();
+		this.view = view;
+	}
 
-        Platform.runLater(() ->{
-            view.getList().setItems((ObservableList<Song>) library);
-            view.getPlaylist().setItems((ObservableList<Song>) playlist);
+	@Override
+	public void updateView(Playlist library, Playlist playlist, int lib, int pl) throws RemoteException {
 
-            view.getList().getSelectionModel().selectIndices(lib);
-            view.getPlaylist().getSelectionModel().selectIndices(pl);
+		Platform.runLater(() -> {
+			view.getList().setItems((ObservableList<Song>) library);
+			view.getPlaylist().setItems((ObservableList<Song>) playlist);
 
-            view.getList().refresh();
-            view.getPlaylist().refresh();
-        });
+			view.getList().getSelectionModel().selectIndices(lib);
+			view.getPlaylist().getSelectionModel().selectIndices(pl);
 
-    }
+			view.getList().refresh();
+			view.getPlaylist().refresh();
+		});
+
+	}
 }

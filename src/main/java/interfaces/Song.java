@@ -2,34 +2,35 @@ package interfaces;
 
 import javafx.beans.value.ObservableValue;
 
-import java.io.Serializable;
-
-
 public interface Song {
-    String getAlbum() ;
+	String getAlbum();
 
-    void setAlbum(String album) ;
+	void setAlbum(String album);
 
-    String getInterpret() ;
+	String getInterpret();
 
-    void setInterpret(String interpret) ;
+	void setInterpret(String interpret);
 
-    String getPath() ;
+	String getPath();
 
-    void setPath(String path) ;
+	void setPath(String path);
 
-    String getTitle() ;
+	String getTitle();
 
-    void setTitle(String title) ;
+	void setTitle(String title);
 
-    long getId();
+	long getId();
 
-    void setId(long id);
+	void setId(long id);
 
-    ObservableValue<String> pathProperty();
-    ObservableValue<String> albumProperty();
-    ObservableValue<String> interpretProperty();
-    ObservableValue<String> titleProperty();
+	ObservableValue<String> pathProperty();
 
-    String toString();
+	ObservableValue<String> albumProperty();
+
+	ObservableValue<String> interpretProperty();
+
+	ObservableValue<String> titleProperty();
+
+	@Override
+	String toString();
 }
